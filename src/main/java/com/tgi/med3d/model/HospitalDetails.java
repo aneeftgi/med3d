@@ -1,0 +1,55 @@
+package com.tgi.med3d.model;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Entity
+@Data
+@Table(name = "hospital_details")
+
+public class HospitalDetails {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "hospital_name")
+	private String hospitalName;	
+		
+	@Column(name = "status")
+	private String hospitalStatus;
+	
+	@Column(name = "address_line_1")
+	private String addressLine1;	
+	
+	@Column(name = "address_line_2")
+	private String addressLine2;	
+	
+	@Column(name = "state_id")
+	private Long stateId;
+	
+	@Column(name = "district_id")
+	private Long districtId;	
+	
+	@Column(name = "taluk_id")
+	private Long talukId;	
+	
+	
+ 
+
+}
