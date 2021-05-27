@@ -17,7 +17,7 @@ import com.tgi.med3d.repository.RoleMasterRepository;
 public class Med3dApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Med3dApplication.class, args);  
+		SpringApplication.run(Med3dApplication.class, args);   
 	}
 	
 
