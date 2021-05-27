@@ -17,7 +17,6 @@ public class AppConfig
 	@Value("${connectionTimeout}")
 	private String connectionTimeout;
 
-	//private int timeout=1000;
     @Bean 
     public RestTemplate restTemplate(
             RestTemplateBuilder restTemplateBuilder) {

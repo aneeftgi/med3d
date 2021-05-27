@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgi.med3d.model.UserRequestDto;
-import com.tgi.med3d.service.UserService;
+import com.tgi.med3d.service.UserServiceImpl;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.ResponseHeaderUtility;
 
@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiResponses;
 public class UserManagementController {
 
 	@Autowired
-	UserService userService;
+	UserServiceImpl userService;
 	
 	@RequestMapping(value = "/getAllUser", method = RequestMethod.GET)
 	@ApiOperation(value = "This api is used to get all user data", notes = "Returns HTTP 200 if successful get the record")

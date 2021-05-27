@@ -10,13 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.tgi.med3d.model.LoginRequestDto;
-import com.tgi.med3d.service.LoginService;
+import com.tgi.med3d.service.LoginServiceImpl;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.ResponseHeaderUtility;
 
@@ -37,7 +36,7 @@ import io.swagger.annotations.ApiResponses;
 public class AuthenticationController {
 
 	@Autowired
-	LoginService loginService;
+	LoginServiceImpl loginService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ApiOperation(value = "This api is used to login", notes = "Returns HTTP 200 if successful get the record")

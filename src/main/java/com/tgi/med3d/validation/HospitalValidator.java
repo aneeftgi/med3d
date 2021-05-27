@@ -22,11 +22,7 @@ public class HospitalValidator {
 		}else if(hospitalMasterRequestDto.getUserName()!=null && !ValidatorUtil.isEmailValid(hospitalMasterRequestDto.getUserName())) {
 			valid=false;
 			errorMsg.append("Email Id is empty/not valid");
-		} /*
-			 * else if(userMasterRequestDto.getUserType()==null ||
-			 * !EnumUtils.isValidEnum(UserType.class, userMasterRequestDto.getUserType())) {
-			 * valid=false; errorMsg.append("User Type not valid"); }
-			 */
+		} 
 		
 		if(!valid) {
 			throw new InvalidDataValidation(errorMsg.toString());

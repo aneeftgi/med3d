@@ -38,9 +38,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+	
 	private ApiKey apiKey() { 
 	    return new ApiKey("JWT", "Authorization", "header"); 
 	}
+	
 	private SecurityContext securityContext() { 
 	    return SecurityContext.builder().securityReferences(defaultAuth()).build(); 
 	} 
@@ -51,6 +53,7 @@ public class SwaggerConfig {
 	    authorizationScopes[0] = authorizationScope; 
 	    return Arrays.asList(new SecurityReference("JWT", authorizationScopes)); 
 	}
+	
 	@Bean
 	public Docket api() {
 	    return new Docket(DocumentationType.SWAGGER_2)

@@ -54,8 +54,6 @@ public class GenericResponse implements Serializable {
 	private String message;
 	private Object data;
 	
-//	private String message;
-	
-	//{"statusInfo":{"status":"S","errorDescription":"Success","errorCode":100
+
 
 }

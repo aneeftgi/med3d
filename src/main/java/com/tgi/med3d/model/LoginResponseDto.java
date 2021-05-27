@@ -16,7 +16,7 @@ public class LoginResponseDto implements Serializable {
 	
 	private Long userId;	
 	
-	private String userName; //emailId is their user name
+	private String userName; 
 	
 	private String accessToken;
 		

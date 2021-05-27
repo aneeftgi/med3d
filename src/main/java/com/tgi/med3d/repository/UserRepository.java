@@ -19,8 +19,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	
 	@Query("select u from User u where u.hospitalDetails.id=:hospital_id")
 	List<User> getUserByHospitalDetailsId(@Param("hospital_id") Long hospitalId);
-	
-//	@Query("select u from User u where u.hospitalDetails.id=:hospital_id and u.userDetails.id is null or u.userDetails.id=' ' ")
-//	User getHospitalAdmin(@Param("hospital_id") Long hospitalId);
+
 
 }

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tgi.med3d.service.RoleService;
-import com.tgi.med3d.service.UserService;
+import com.tgi.med3d.service.RoleServiceImpl;
+import com.tgi.med3d.service.UserServiceImpl;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.ResponseHeaderUtility;
 
@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiResponses;
 public class RoleManagementController {
 
 	@Autowired
-	RoleService roleService;
+	RoleServiceImpl roleService;
 	
 	@RequestMapping(value = "/getAllRoles", method = RequestMethod.GET)
 	@ApiOperation(value = "get All roles", notes = "Returns HTTP 200 if successful get the record")

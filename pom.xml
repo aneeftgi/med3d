@@ -12,7 +12,7 @@
 	<artifactId>med3d</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>med3d</name>
-	<description>Bulk excel data upload to Mysql</description>
+	<description>Med3d Project</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>

@@ -53,7 +53,7 @@ public class User implements Serializable{
 	private Long id;
 	
 	@Column(name = "user_name")
-	private String userName;          //email Id
+	private String userName;          
 	
 	@Column(name = "phone_number")
 	private long phoneNumber;

@@ -36,13 +36,13 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
    @Value("${jwt.signing-key:123}")
    private String jwtSigningKey;
 
-   @Value("${jwt.accessTokenValidititySeconds:43200}") // 12 hours
+   @Value("${jwt.accessTokenValidititySeconds:43200}") 
    private int accessTokenValiditySeconds;
 
    @Value("${jwt.authorizedGrantTypes:password,authorization_code,refresh_token}")
    private String[] authorizedGrantTypes;
 
-   @Value("${jwt.refreshTokenValiditySeconds:2592000}") // 30 days
+   @Value("${jwt.refreshTokenValiditySeconds:2592000}") 
    private int refreshTokenValiditySeconds;
 
    public OAuthConfiguration(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserDetailsService userService) {

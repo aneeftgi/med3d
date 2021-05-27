@@ -8,6 +8,7 @@ import com.tgi.med3d.model.HospitalDetails;
 import com.tgi.med3d.model.User;
 
 public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails,Long>{
+	
 	@Query("select u from HospitalDetails u where u.id=:id ")
 	HospitalDetails getById(@Param("id") Long id);
 }

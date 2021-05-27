@@ -19,7 +19,7 @@ public class HospitalResponseDto implements Serializable{
 
 	private Long userId;
 
-	private String userName; //here means the email ID
+	private String userName; 
 	
 	private String roleName;
 	

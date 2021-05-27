@@ -58,12 +58,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and()
                 .csrf().disable()
-//                .authorizeRequests()
-//                .antMatcher("/usermanager/**")   
-//                .antMatcher("/hospitalManager/**")            
-//                .antMatcher("/rolemanager/**")              
                 .authorizeRequests()
-//                .antMatchers("/usermanager/getAllRoles").permitAll()
                 .antMatchers("/authentication/**").permitAll()
                 .antMatchers("/oauth/authorize","/oauth/confirm_access","/oauth/token").permitAll()
                 .antMatchers("/swagger-resources/**","/webjars/**", "/swagger-ui.html","/v2/**").permitAll()
