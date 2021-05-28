@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tgi.med3d.model.HospitalRequestDto;
 import com.tgi.med3d.service.HospitalServiceImpl;
-import com.tgi.med3d.service.HospitalServiceImpl;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.ResponseHeaderUtility;
 

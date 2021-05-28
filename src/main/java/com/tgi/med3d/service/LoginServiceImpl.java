@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,6 +53,17 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 	@Autowired
 	RestTemplate restTemplate;
 	
+	 @Value("${server.port}")
+	   private String portNo;
+	
+	   @Value("${jwt.clientId}")
+	   private String clientId;
+
+	   @Value("${jwt.client-secret}")
+	   private String clientSecret;
+
+	 
+	
 	
 	 @Override
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -83,7 +95,9 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 		log.info("username : " + username);
 		HttpHeaders headers = new HttpHeaders();
 
-		String access_token_url = "http://localhost:8080/oauth/token?";
+		String access_token_url = "http://localhost:";
+		access_token_url += portNo;
+		access_token_url +="/oauth/token?";
 		access_token_url += "grant_type=password";
 		access_token_url += "&username=";
 		access_token_url +=username;
@@ -92,7 +106,7 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 		ResponseEntity<String> response = null;
 
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		headers.setBasicAuth("med3d", "secret");
+		headers.setBasicAuth(clientId, clientSecret);
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 		response = restTemplate.exchange(access_token_url, HttpMethod.POST, entity, String.class);
 		System.out.println("Access Token Response ---------" + response.getBody());

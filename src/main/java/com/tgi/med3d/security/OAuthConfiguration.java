@@ -27,22 +27,22 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
 	
 	private final PasswordEncoder passwordEncoder;
 
-   @Value("${jwt.clientId:med3d}")
+   @Value("${jwt.clientId}")
    private String clientId;
 
-   @Value("${jwt.client-secret:secret}")
+   @Value("${jwt.client-secret}")
    private String clientSecret;
 
-   @Value("${jwt.signing-key:123}")
+   @Value("${jwt.signing-key}")
    private String jwtSigningKey;
 
-   @Value("${jwt.accessTokenValidititySeconds:43200}") 
+   @Value("${jwt.accessTokenValidititySeconds}") 
    private int accessTokenValiditySeconds;
 
-   @Value("${jwt.authorizedGrantTypes:password,authorization_code,refresh_token}")
+   @Value("${jwt.authorizedGrantTypes}")
    private String[] authorizedGrantTypes;
 
-   @Value("${jwt.refreshTokenValiditySeconds:2592000}") 
+   @Value("${jwt.refreshTokenValiditySeconds}") 
    private int refreshTokenValiditySeconds;
 
    public OAuthConfiguration(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserDetailsService userService) {

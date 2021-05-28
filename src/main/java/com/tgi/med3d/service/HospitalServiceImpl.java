@@ -54,7 +54,7 @@ public class HospitalServiceImpl implements HospitalService  {
 	@Autowired
 	HospitalDetailsRepository hospitalDetailsRepository;
 
-	
+	 @Override
 	public GenericResponse getAllHospital() {
 		List<HospitalDetails> hospitalDetailsList = hospitalDetailsRepository.findAll();
 		if (hospitalDetailsList.size() > 0) {
@@ -116,7 +116,6 @@ public class HospitalServiceImpl implements HospitalService  {
 			  userMaster.setHospitalDetails(hospitalDetails);
 			  
 			  }
-	
 	public GenericResponse updateHospital(HospitalRequestDto hospitalRequestDto) {
 		HospitalValidator.createHospitalValidator(hospitalRequestDto);
 
@@ -140,7 +139,6 @@ public class HospitalServiceImpl implements HospitalService  {
 			throw new RecordNotFoundException();
 		}
 	}
-
 
 
 	public GenericResponse deleteHospital(Long id) {
