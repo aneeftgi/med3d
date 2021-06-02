@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgi.med3d.model.HospitalRequestDto;
-import com.tgi.med3d.service.HospitalServiceImpl;
+import com.tgi.med3d.service.HospitalService;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.ResponseHeaderUtility;
 
@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiResponses;
 public class HospitalManagementController {
 
 	@Autowired
-	HospitalServiceImpl hospitalService;
+	HospitalService hospitalService;
 	
 	@RequestMapping(value = "/getAllHospital", method = RequestMethod.GET)
 	@ApiOperation(value = "This api is used to get all hospital data", notes = "Returns HTTP 200 if successful get the record")
