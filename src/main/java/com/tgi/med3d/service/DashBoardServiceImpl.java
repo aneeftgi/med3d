@@ -1,6 +1,7 @@
 package com.tgi.med3d.service;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,18 @@ public class DashBoardServiceImpl implements DashBoardService {
 		
 		DashBoardDetails dashBoardDetails= new DashBoardDetails();
 		List<Object[]>  userCount = userRepository.getAllUserCount();		
-		
 		if(userCount.size()>0) {
-		userCount.forEach(record->{
-			dashBoardDetails.setUserCount((long)record[0]);
-			dashBoardDetails.setActiveUserCount((long)record[1]);
-			dashBoardDetails.setInActiveUserCount((long)record[2]);
-		});
+			userCount.forEach(record->{
+				dashBoardDetails.setUserCount((long) record[0]);
+				dashBoardDetails.setActiveUserCount((long)record[1]);
+				dashBoardDetails.setInActiveUserCount((long)record[2]);
+					
+			});
 		}
+
 		List<Object[]>  hospitalCount = hospitalDetailsRepository.getAllHospitalCount();
 		if(hospitalCount.size()>0) {
-			hospitalCount.forEach(record->{
+				hospitalCount.forEach(record->{
 				dashBoardDetails.setHospitalCount((long)record[0]);
 				dashBoardDetails.setActiveHospitalCount((long)record[1]);
 				dashBoardDetails.setInActiveHospitalCount((long)record[2]);

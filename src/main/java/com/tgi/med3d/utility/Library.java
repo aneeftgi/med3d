@@ -13,12 +13,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class Library {
-	public static String getAmountConvertFromPaiseToRs(String strValue) {
-		if (strValue != null && !strValue.equals("")) {
-			return "" + Float.parseFloat(strValue.trim()) / 100;
-		}
-		return "0";
-	}
+	
 
 	public static Float getFloatValue(String strValue) {
 		if (strValue != null && !strValue.equals("")) {
@@ -119,7 +114,7 @@ public class Library {
 	}
 	
 	public static boolean isNullOrEmpty(String str) { 
-		if (str != null && !str.isEmpty() && !str.isBlank())
+		if (str != null && !str.isEmpty())
 			return false;
 		return true;
 	}

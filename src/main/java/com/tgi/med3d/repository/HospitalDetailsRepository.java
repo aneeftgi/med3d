@@ -14,10 +14,9 @@ public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails
 	@Query("select u from HospitalDetails u where u.id=:id ")
 	HospitalDetails getById(@Param("id") Long id);	
 	
-	
 	@Query("select count(*) as totalHospital, \r\n"
-			+ "sum(case when h.hospitalStatus='Active' then 1 else 0 end) as activehospital,\r\n"
-			+ "sum(case when h.hospitalStatus='Inactive' then 1 else 0 end) as inActivehospital \r\n"
+			+ "COALESCE(sum(case when h.hospitalStatus='Active' then 1 else 0 end),0) as activehospital,\r\n"
+			+ "COALESCE(sum(case when h.hospitalStatus='Inactive' then 1 else 0 end),0) as inActivehospital \r\n"
 			+ "from HospitalDetails h")	
 	List<Object[]> getAllHospitalCount();	
 	

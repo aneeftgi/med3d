@@ -56,13 +56,14 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 	 @Value("${server.port}")
 	   private String portNo;
 	
+//	 @Value("${server.address}")
+//	   private String ipAddress;
+	 
 	   @Value("${jwt.clientId}")
 	   private String clientId;
 
 	   @Value("${jwt.client-secret}")
-	   private String clientSecret;
-
-	 
+	   private String clientSecret; 
 	
 	
 	 @Override
@@ -95,7 +96,9 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 		log.info("username : " + username);
 		HttpHeaders headers = new HttpHeaders();
 
-		String access_token_url = "http://localhost:";
+		String access_token_url = "http://";
+		access_token_url += "localhost";
+		access_token_url +=":";
 		access_token_url += portNo;
 		access_token_url +="/oauth/token?";
 		access_token_url += "grant_type=password";
