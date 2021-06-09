@@ -2,6 +2,8 @@ package com.tgi.med3d.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +13,7 @@ import com.tgi.med3d.model.User;
 
 public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails,Long>{
 	
-	@Query("select u from HospitalDetails u where u.id=:id ")
+	@Query("select h from HospitalDetails h where h.id=:id ")
 	HospitalDetails getById(@Param("id") Long id);	
 	
 	@Query("select count(*) as totalHospital, \r\n"
@@ -20,5 +22,9 @@ public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails
 			+ "from HospitalDetails h")	
 	List<Object[]> getAllHospitalCount();	
 	
+	@Query("select h from HospitalDetails h where h.hospitalName like :hospitalName%")
+	Page<HospitalDetails> findByHospitalName(@Param("hospitalName") String hospitalName,Pageable pageable);
+	
+	Page<HospitalDetails> findAll(Pageable pageable);
 		
 }

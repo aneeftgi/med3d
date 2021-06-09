@@ -3,6 +3,7 @@ package com.tgi.med3d.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiResponses;
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
 @RequestMapping("/dashBoard")
+@CrossOrigin
 public class DashBoardController {		
 	
 	@Autowired
@@ -43,12 +45,10 @@ public class DashBoardController {
 	}
 	
 	@RequestMapping(value = "/hospital/{hospitalId}", method = RequestMethod.GET)
-	@ApiOperation(value = "This api is used to get hospital admin dashboard", notes = "Returns HTTP 200 if successful get the record")
+	@ApiOperation(value = "This api is used to get hospital user dashboard", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> userDashboard(@PathVariable Long hospitalId) {
 		GenericResponse objGenericResponse = dashBoardService.hospitalDashBoard(hospitalId);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
-
-
 
 }

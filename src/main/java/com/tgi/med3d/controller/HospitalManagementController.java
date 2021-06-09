@@ -3,6 +3,8 @@ package com.tgi.med3d.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,18 +30,22 @@ import io.swagger.annotations.ApiResponses;
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
 @RequestMapping("/hospitalManager")
+@CrossOrigin
 public class HospitalManagementController {
 
 	@Autowired
 	HospitalService hospitalService;
 	
-	@RequestMapping(value = "/getAllHospital", method = RequestMethod.GET)
-	@ApiOperation(value = "This api is used to get all hospital data", notes = "Returns HTTP 200 if successful get the record")
-	public ResponseEntity<Object> getAllHospital() {
-		GenericResponse objGenericResponse = hospitalService.getAllHospital();
-		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
-	}
-
+	/*
+	 * @RequestMapping(value = "/getAllHospital", method = RequestMethod.GET)
+	 * 
+	 * @ApiOperation(value = "This api is used to get all hospital data", notes =
+	 * "Returns HTTP 200 if successful get the record") public
+	 * ResponseEntity<Object> getAllHospital() { GenericResponse objGenericResponse
+	 * = hospitalService.getAllHospital(); return new
+	 * ResponseEntity<>(objGenericResponse,
+	 * ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK); }
+	 */
 	
 	@RequestMapping(value = "/addHospital", method = RequestMethod.POST)
 	@ApiOperation(value = "add hospital ", notes = "Returns HTTP 200 if successful get the record")
@@ -61,6 +67,15 @@ public class HospitalManagementController {
 	public ResponseEntity<Object> deleteHospital(@RequestParam Long hospitalId) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.deleteHospital(hospitalId);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	@ApiOperation(value = "search by hospital by name", notes = "Returns HTTP 200 if successful get the record")
+	public ResponseEntity<Object> searchHospital(@RequestParam(required=false) String search,
+			   @RequestParam(defaultValue = "0") int page,
+		        @RequestParam(defaultValue = "10") int size) throws Exception {				
+		GenericResponse objGenericResponse = hospitalService.searchHospital(search,page,size);		
+		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);		
 	}
 	
 	

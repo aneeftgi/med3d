@@ -14,4 +14,6 @@ public interface HospitalService {
 	
 	public GenericResponse deleteHospital(Long id) ;
 
+	public GenericResponse searchHospital(String search, int pageNo, int pageSize);
+
 }

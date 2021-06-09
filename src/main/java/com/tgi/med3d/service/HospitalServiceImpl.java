@@ -8,6 +8,10 @@ import java.util.Optional;
 
 import org.jasypt.digest.StringDigester;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +27,7 @@ import com.tgi.med3d.exception.RecordNotFoundException;
 import com.tgi.med3d.model.HospitalDetails;
 import com.tgi.med3d.model.HospitalRequestDto;
 import com.tgi.med3d.model.HospitalResponseDto;
+import com.tgi.med3d.model.PaginationResponseDTO;
 import com.tgi.med3d.model.RoleMaster;
 import com.tgi.med3d.model.User;
 import com.tgi.med3d.model.UserResponseDto;
@@ -174,7 +179,34 @@ private void isUserExists(String userName) {
 			throw new InvalidDataValidation("User Name already Exists");
 		
 	}
+
+@Override
+public GenericResponse searchHospital(String search, int pageNo, int pageSize) {
+	if(pageNo>=0 &&  pageSize>0) {
+		Pageable pageableRequest = PageRequest.of(pageNo,pageSize,Sort.Direction.ASC,"id");
+		Page<HospitalDetails> hp;
+		if(search == null)
+			hp = hospitalDetailsRepository.findAll(pageableRequest);
+		else
+		 hp = hospitalDetailsRepository.findByHospitalName(search, pageableRequest);
+	if(hp!=null) {		
+		PaginationResponseDTO paginationResponseDTO = new PaginationResponseDTO();
+		paginationResponseDTO.setContents(hp.getContent());
+		paginationResponseDTO.setNumberOfElements(hp.getNumberOfElements());
+		paginationResponseDTO.setTotalElements(hp.getTotalElements());
+		paginationResponseDTO.setTotalPages(hp.getTotalPages());
+		return Library.getSuccessfulResponse(paginationResponseDTO, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
+				ErrorMessages.RECORED_FOUND);
+	}
+	else {
+		throw new RecordNotFoundException();
+	}
+	}
+	else 
+		throw new InvalidDataValidation();
 	
+}
+
 
 	}
 
