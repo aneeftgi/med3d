@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,8 @@ import io.swagger.annotations.ApiResponses;
 @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
+@CrossOrigin(origins ="http://localhost:3000/")
 @RequestMapping("/hospitalManager")
-@CrossOrigin
 public class HospitalManagementController {
 
 	@Autowired
@@ -69,7 +70,8 @@ public class HospitalManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	@CrossOrigin(origins ="http://localhost:3000/")
+	@GetMapping(value = "/search")
 	@ApiOperation(value = "search by hospital by name", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> searchHospital(@RequestParam(required=false) String search,
 			   @RequestParam(defaultValue = "0") int page,

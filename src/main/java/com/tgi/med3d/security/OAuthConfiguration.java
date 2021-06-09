@@ -18,8 +18,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 @Configuration
 @EnableAuthorizationServer
 public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
-
-
    
 	private final AuthenticationManager authenticationManager;
 	
@@ -61,10 +59,11 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                .authorizedGrantTypes(authorizedGrantTypes)
                .scopes("read", "write")
                .resourceIds("usermanager");
+            
    }
 
    @Override
-   public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
+   public void configure(final AuthorizationServerEndpointsConfigurer endpoints) { //this method runs while starting the app
        endpoints
        .accessTokenConverter(accessTokenConverter())
        .userDetailsService(userService)

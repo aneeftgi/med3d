@@ -6,11 +6,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.tgi.med3d.exception.CustomAccessDeniedHandler;
 import com.tgi.med3d.exception.CustomAuthenticationEntryPoint;
-
-
 
 @Configuration
 @EnableResourceServer
@@ -28,7 +27,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+        		.and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
