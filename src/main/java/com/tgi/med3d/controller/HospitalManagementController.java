@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiResponses;
 @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
-@CrossOrigin(origins ="http://localhost:3000/")
+//@CrossOrigin(origins ="http://localhost:3000/")
 @RequestMapping("/hospitalManager")
 public class HospitalManagementController {
 
@@ -70,7 +70,7 @@ public class HospitalManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@CrossOrigin(origins ="http://localhost:3000/")
+//	@CrossOrigin(origins ="http://localhost:3000/")
 	@GetMapping(value = "/search")
 	@ApiOperation(value = "search by hospital by name", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> searchHospital(@RequestParam(required=false) String search,
@@ -79,6 +79,5 @@ public class HospitalManagementController {
 		GenericResponse objGenericResponse = hospitalService.searchHospital(search,page,size);		
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);		
 	}
-	
 	
 }

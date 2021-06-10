@@ -31,7 +31,6 @@ import io.swagger.annotations.ApiResponses;
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
 @RequestMapping("/dashBoard")
-@CrossOrigin
 public class DashBoardController {		
 	
 	@Autowired

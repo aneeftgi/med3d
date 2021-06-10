@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,8 +58,8 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                .accessTokenValiditySeconds(accessTokenValiditySeconds)
                .refreshTokenValiditySeconds(refreshTokenValiditySeconds)
                .authorizedGrantTypes(authorizedGrantTypes)
-               .scopes("read", "write")
-               .resourceIds("usermanager");
+               .scopes("read", "write");
+//               .resourceIds("usermanager");
             
    }
 
@@ -76,5 +77,21 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
        converter.setSigningKey(jwtSigningKey);
        return converter;
    }
+   
+//   @Bean
+//   public PasswordEncoder passwordEncoder() {
+//       return new BCryptPasswordEncoder();
+//   }
+//   
+//   @Bean
+//   public WebSecurityConfigurerAdapter authenticationManagerBean() {
+//       return new WebSecurityConfigurerAdapter() {
+//       	 @Override
+//       	    public AuthenticationManager authenticationManagerBean() throws Exception {
+//       	        return super.authenticationManagerBean();
+//       	    }
+//       };
+//   }
+   
 
 }
