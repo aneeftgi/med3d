@@ -40,6 +40,12 @@ public class HospitalDetails {
 	@Column(name = "address_line_2")
 	private String addressLine2;	
 	
+//	@Column(name = "phone_number")
+//	private long phoneNumer;	
+//	
+//	@Column(name = "email")
+//	private String email;
+	
 	@Column(name = "state_id")
 	private Long stateId;
 	

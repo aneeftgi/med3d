@@ -118,6 +118,8 @@ public class HospitalServiceImpl implements HospitalService  {
 			 hospitalDetails.setDistrictId(hospitalRequestDto.getHospitalDetails().getDistrictId());
 			 hospitalDetails.setStateId(hospitalRequestDto.getHospitalDetails().getStateId());
 			 hospitalDetails.setTalukId(hospitalRequestDto.getHospitalDetails().getTalukId());
+//			 hospitalDetails.setEmail(hospitalRequestDto.getHospitalDetails().getEmail());
+//			 hospitalDetails.setPhoneNumer(hospitalRequestDto.getHospitalDetails().getPhoneNumer());
 			  userMaster.setHospitalDetails(hospitalDetails);
 			  
 			  }

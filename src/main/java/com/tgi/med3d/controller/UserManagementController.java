@@ -56,14 +56,14 @@ public class UserManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	@ApiOperation(value = "update user ", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> updateUser(@RequestBody UserRequestDto userRequestDto) throws Exception {
 		GenericResponse objGenericResponse = userService.updateUser(userRequestDto);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
 	@ApiOperation(value = "delete user by id", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> deleteUser(@RequestParam Long userId) throws Exception {
 		GenericResponse objGenericResponse = userService.deleteUser(userId);

@@ -55,15 +55,14 @@ public class HospitalManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/updateHospital", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateHospital", method = RequestMethod.PUT)
 	@ApiOperation(value = "update hospital ", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> updateHospital(@RequestBody HospitalRequestDto hospitalMasterRequestDto) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.updateHospital(hospitalMasterRequestDto);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
-
 	
-	@RequestMapping(value = "/deleteHospital", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/deleteHospital", method = RequestMethod.POST)
 	@ApiOperation(value = "delete hospital by id", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> deleteHospital(@RequestParam Long hospitalId) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.deleteHospital(hospitalId);
@@ -71,7 +70,7 @@ public class HospitalManagementController {
 	}
 	
 //	@CrossOrigin(origins ="http://localhost:3000/")
-	@GetMapping(value = "/search")
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	@ApiOperation(value = "search by hospital by name", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> searchHospital(@RequestParam(required=false) String search,
 			   @RequestParam(defaultValue = "0") int page,
