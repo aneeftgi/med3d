@@ -22,15 +22,11 @@ public class HospitalRequestDto implements Serializable {
 	private Long id; 
 
 	private String userName; 
-	
-	private long phoneNumber; 
-	
-	private String password; 
-	
-	private String status;
 		
+	private String password; 
+			
 	private Long roleId;	
 	
-	private HospitalDetails hospitalDetails;
+	private Hospital hospitalDetails;
 	
 }

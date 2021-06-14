@@ -22,17 +22,21 @@ public class UserRequestDto implements Serializable {
 	
 	private String userName; 
 	
-	private long phoneNumber; 
+	private String phoneNumber; 
+	
+	private String gender;
 	
 	private String password; 
 	
-	private String status;
+	private boolean status;
+	
+	private String address1;	
+	
+	private String address2;	
 	
 	private Long roleId;
 	
 	private Long hospitalId;
-	
-	private UserDetails userDetails;			
-	
+		
 	
 }

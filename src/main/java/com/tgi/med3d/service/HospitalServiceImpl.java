@@ -24,16 +24,14 @@ import com.tgi.med3d.constant.ErrorMessages;
 import com.tgi.med3d.enums.UserStatus;
 import com.tgi.med3d.exception.InvalidDataValidation;
 import com.tgi.med3d.exception.RecordNotFoundException;
-import com.tgi.med3d.model.HospitalDetails;
+import com.tgi.med3d.model.Hospital;
 import com.tgi.med3d.model.HospitalRequestDto;
 import com.tgi.med3d.model.HospitalResponseDto;
 import com.tgi.med3d.model.PaginationResponseDTO;
-import com.tgi.med3d.model.RoleMaster;
 import com.tgi.med3d.model.User;
 import com.tgi.med3d.model.UserResponseDto;
-import com.tgi.med3d.repository.HospitalDetailsRepository;
-import com.tgi.med3d.repository.RoleMasterRepository;
-import com.tgi.med3d.repository.UserDetailsRepository;
+import com.tgi.med3d.repository.HospitalRepository;
+import com.tgi.med3d.repository.RoleRepository;
 import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
@@ -50,21 +48,21 @@ public class HospitalServiceImpl implements HospitalService  {
 	UserRepository userRepository;
 	
 	@Autowired
-	RoleMasterRepository roleMasterRepository;
+	RoleRepository roleMasterRepository;
 
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
 	@Autowired
-	HospitalDetailsRepository hospitalDetailsRepository;
+	HospitalRepository hospitalDetailsRepository;
 
 	 @Override
 	public GenericResponse getAllHospital() {
-		List<HospitalDetails> hospitalDetailsList = hospitalDetailsRepository.findAll();
+		List<Hospital> hospitalDetailsList = hospitalDetailsRepository.findAll();
 		if (hospitalDetailsList.size() > 0) {
 			
-			hospitalDetailsList.removeIf((HospitalDetails Hd)-> Hd.getHospitalStatus().equals(UserStatus.Inactive.name()));
+			hospitalDetailsList.removeIf((Hospital Hd)-> Hd.isHospitalStatus()==false);
 
 			return Library.getSuccessfulResponse(hospitalDetailsList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
 					ErrorMessages.RECORED_FOUND);
@@ -72,6 +70,18 @@ public class HospitalServiceImpl implements HospitalService  {
 			throw new RecordNotFoundException();
 		}
 	}	
+//		private HospitalResponseDto convertUserEntityToDto(User user) {		
+//			HospitalResponseDto hospitalResponseDto = new HospitalResponseDto();
+//			userResponseDto.setId(user.getId());
+//			userResponseDto.setUserName(user.getUserName());
+//			userResponseDto.setPhoneNumber(user.getPhoneNumber());
+//			userResponseDto.setStatus(user.isStatus());
+//			if (user != null && user.getId() != null && user.getRole() != null) {
+//				userResponseDto.setRoleName(user.getRole().getRoleName());
+//			}
+//
+//			return userResponseDto;
+//		}
 			
 	@SuppressWarnings("unused")
 	public GenericResponse addHospital(HospitalRequestDto hospitalRequestDto) {
@@ -85,9 +95,8 @@ public class HospitalServiceImpl implements HospitalService  {
 			/* user save starts */
 			// user 
 			user.setUserName(hospitalRequestDto.getUserName());
-			user.setPhoneNumber(hospitalRequestDto.getPhoneNumber());
-			user.setStatus(hospitalRequestDto.getStatus());
-			user.setRoleId(hospitalRequestDto.getRoleId());
+			user.setStatus(true);
+			user.setRole(roleMasterRepository.getById(hospitalRequestDto.getRoleId()));
 			if (user.getPassword() == null) {
 				String newPasswordEnc = (hospitalRequestDto.getPassword().trim());
 				
@@ -95,12 +104,12 @@ public class HospitalServiceImpl implements HospitalService  {
 			}			
 			//user
 			// hospital details
-			HospitalDetails hospitalDetails = new HospitalDetails();
+			Hospital hospitalDetails = new Hospital();
 			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 			// hospital details
 			
 			userRepository.save(user);
-			return Library.getSuccessfulResponse(user,
+			return Library.getSuccessfulResponse(hospitalDetails,
 					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_CREATED);
 						
 		} else {
@@ -109,18 +118,17 @@ public class HospitalServiceImpl implements HospitalService  {
 	}
 
 	 private void pouplateHospitalDetails(User userMaster, HospitalRequestDto
-			 hospitalRequestDto,HospitalDetails hospitalDetails) 
+			 hospitalRequestDto,Hospital hospitalDetails) 
 	 { 
 			  hospitalDetails.setHospitalName(hospitalRequestDto.getHospitalDetails().getHospitalName());
-			 hospitalDetails.setHospitalStatus(hospitalRequestDto.getHospitalDetails().getHospitalStatus());
-			 hospitalDetails.setAddressLine1(hospitalRequestDto.getHospitalDetails().getAddressLine1());
-			 hospitalDetails.setAddressLine2(hospitalRequestDto.getHospitalDetails().getAddressLine2());
-			 hospitalDetails.setDistrictId(hospitalRequestDto.getHospitalDetails().getDistrictId());
-			 hospitalDetails.setStateId(hospitalRequestDto.getHospitalDetails().getStateId());
-			 hospitalDetails.setTalukId(hospitalRequestDto.getHospitalDetails().getTalukId());
-//			 hospitalDetails.setEmail(hospitalRequestDto.getHospitalDetails().getEmail());
-//			 hospitalDetails.setPhoneNumer(hospitalRequestDto.getHospitalDetails().getPhoneNumer());
-			  userMaster.setHospitalDetails(hospitalDetails);
+			 hospitalDetails.setHospitalStatus(hospitalRequestDto.getHospitalDetails().isHospitalStatus());
+			 hospitalDetails.setAddress1(hospitalRequestDto.getHospitalDetails().getAddress1());
+			 hospitalDetails.setAddress2(hospitalRequestDto.getHospitalDetails().getAddress2());
+			 hospitalDetails.setContactNumber(hospitalRequestDto.getHospitalDetails().getContactNumber());
+			 hospitalDetails.setHospitalLogo(hospitalRequestDto.getHospitalDetails().getHospitalLogo());
+			 hospitalDetails.setHospitalDescription(hospitalRequestDto.getHospitalDetails().getHospitalDescription());
+
+			  userMaster.setHospital(hospitalDetails);
 			  
 			  }
 	public GenericResponse updateHospital(HospitalRequestDto hospitalRequestDto) {
@@ -131,7 +139,7 @@ public class HospitalServiceImpl implements HospitalService  {
 
 			if (user != null && user.getId() != null) {
 				
-			HospitalDetails hospitalDetails = user.getHospitalDetails();
+			Hospital hospitalDetails = user.getHospital();
 				
 			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 						
@@ -149,11 +157,11 @@ public class HospitalServiceImpl implements HospitalService  {
 
 
 	public GenericResponse deleteHospital(Long id) {
-		HospitalDetails hospitalDetails = hospitalDetailsRepository.getById(id);
+		Hospital hospitalDetails = hospitalDetailsRepository.getById(id);
 		if (hospitalDetails != null && hospitalDetails.getId() != null) {
 			
 			//Hospital Inactive
-			hospitalDetails.setHospitalStatus("Inactive");
+			hospitalDetails.setHospitalStatus(false);
 			hospitalDetailsRepository.save(hospitalDetails);
 			//Hospital Inactive
 			
@@ -161,7 +169,7 @@ public class HospitalServiceImpl implements HospitalService  {
 			List<User> userList = userRepository.getUserByHospitalDetailsId(hospitalDetails.getId());
 			if (userList.size() > 0) {
 				userList.forEach(um -> {
-					um.setStatus("Inactive");
+					um.setStatus(false);
 					userRepository.save(um);				
 				});
 			}
@@ -186,7 +194,7 @@ private void isUserExists(String userName) {
 public GenericResponse searchHospital(String search, int pageNo, int pageSize) {
 	if(pageNo>=0 &&  pageSize>0) {
 		Pageable pageableRequest = PageRequest.of(pageNo,pageSize,Sort.Direction.ASC,"id");
-		Page<HospitalDetails> hp;
+		Page<Hospital> hp;
 		if(search == null)
 			hp = hospitalDetailsRepository.findAll(pageableRequest);
 		else

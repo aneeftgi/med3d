@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -20,10 +22,14 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-@Table(name = "hospital_details")
-
-public class HospitalDetails {
+@Table(name = "hospital")
+public class Hospital extends Trackable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8529358320553278895L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -31,31 +37,23 @@ public class HospitalDetails {
 	@Column(name = "hospital_name")
 	private String hospitalName;	
 		
-	@Column(name = "status")
-	private String hospitalStatus;
+	@Column(name = "status",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean hospitalStatus;
 	
-	@Column(name = "address_line_1")
-	private String addressLine1;	
+	@Column(name = "address_1")
+	private String address1;	
 	
-	@Column(name = "address_line_2")
-	private String addressLine2;	
+	@Column(name = "address_2")
+	private String address2;		
 	
-//	@Column(name = "phone_number")
-//	private long phoneNumer;	
-//	
-//	@Column(name = "email")
-//	private String email;
+	@Column(name = "contact_number")
+	private String contactNumber;	
+
+	@Column(name = "hospital_logo")
+	private String hospitalLogo;
 	
-	@Column(name = "state_id")
-	private Long stateId;
-	
-	@Column(name = "district_id")
-	private Long districtId;	
-	
-	@Column(name = "taluk_id")
-	private Long talukId;	
-	
-	
- 
+	@Column(name = "hospital_desc")
+	private String hospitalDescription;
 
 }

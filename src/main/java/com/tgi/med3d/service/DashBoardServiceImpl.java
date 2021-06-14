@@ -11,8 +11,8 @@ import com.tgi.med3d.constant.ErrorCode;
 import com.tgi.med3d.constant.ErrorMessages;
 import com.tgi.med3d.exception.RecordNotFoundException;
 import com.tgi.med3d.model.DashBoardDetails;
-import com.tgi.med3d.model.HospitalDetails;
-import com.tgi.med3d.repository.HospitalDetailsRepository;
+import com.tgi.med3d.model.Hospital;
+import com.tgi.med3d.repository.HospitalRepository;
 import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 public class DashBoardServiceImpl implements DashBoardService {
 	
 	@Autowired
-	HospitalDetailsRepository hospitalDetailsRepository;
+	HospitalRepository hospitalDetailsRepository;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -60,7 +60,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	public GenericResponse hospitalDashBoard(Long hospitalId) {
 		DashBoardDetails dashBoardDetails= new DashBoardDetails();
 
-		HospitalDetails hospitalDetails = hospitalDetailsRepository.getById(hospitalId);
+		Hospital hospitalDetails = hospitalDetailsRepository.getById(hospitalId);
 		if(hospitalDetails!=null) {
 			List<Object[]>  hospitalUserCount = userRepository.getHospitalUserCount(hospitalId);		
 		

@@ -6,13 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.tgi.med3d.model.RoleMaster;
+import com.tgi.med3d.model.Role;
 
 @Repository
-public interface RoleMasterRepository extends JpaRepository<RoleMaster, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 	
-	@Query("select r from RoleMaster r where r.id=:id ")
-	RoleMaster getById(@Param("id") Long id);
+	@Query("select r from Role r where r.id=:id ")
+	Role getById(@Param("id") Long id);
 
 
 }

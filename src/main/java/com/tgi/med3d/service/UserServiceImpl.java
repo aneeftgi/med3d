@@ -20,15 +20,12 @@ import com.tgi.med3d.constant.ErrorMessages;
 import com.tgi.med3d.enums.UserStatus;
 import com.tgi.med3d.exception.InvalidDataValidation;
 import com.tgi.med3d.exception.RecordNotFoundException;
-import com.tgi.med3d.model.HospitalDetails;
-import com.tgi.med3d.model.RoleMaster;
+import com.tgi.med3d.model.Hospital;
 import com.tgi.med3d.model.User;
-import com.tgi.med3d.model.UserDetails;
 import com.tgi.med3d.model.UserRequestDto;
 import com.tgi.med3d.model.UserResponseDto;
-import com.tgi.med3d.repository.HospitalDetailsRepository;
-import com.tgi.med3d.repository.RoleMasterRepository;
-import com.tgi.med3d.repository.UserDetailsRepository;
+import com.tgi.med3d.repository.HospitalRepository;
+import com.tgi.med3d.repository.RoleRepository;
 import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
@@ -44,16 +41,14 @@ public class UserServiceImpl implements UserService   {
 	UserRepository userRepository;
 	
 	@Autowired
-	RoleMasterRepository roleMasterRepository;
+	RoleRepository roleMasterRepository;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@Autowired
-	UserDetailsRepository userDetailsRepository;
 	
 	@Autowired
-	HospitalDetailsRepository hospitalDetailsRepository;
+	HospitalRepository hospitalDetailsRepository;
 
 	
 	public GenericResponse getAllUser() {
@@ -63,7 +58,7 @@ public class UserServiceImpl implements UserService   {
 		if (userList.size() > 0) {
 			List<UserResponseDto> userResponseDtoList = new ArrayList<UserResponseDto>();
 			userList.forEach(um -> {
-				if(um.getStatus().equals(UserStatus.Active.name()))
+				if(um.isStatus())
 				userResponseDtoList.add(convertUserEntityToDto(um));
 			});
 			return Library.getSuccessfulResponse(userResponseDtoList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
@@ -74,8 +69,8 @@ public class UserServiceImpl implements UserService   {
 	}
 	
 	public GenericResponse getUserByHospitalId(Long hospitalId) {
-		HospitalDetails hospitalDetails = hospitalDetailsRepository.getById(hospitalId);
-		if(hospitalDetails!=null && hospitalDetails.getHospitalStatus().equals(UserStatus.Active.name())) {
+		Hospital hospitalDetails = hospitalDetailsRepository.getById(hospitalId);
+		if(hospitalDetails!=null && hospitalDetails.isHospitalStatus()) {
 		List<User> userList = userRepository.getUserByHospitalDetailsId(hospitalId);
 		if (userList.size() > 0) {
 			List<UserResponseDto> userResponseDtoList = new ArrayList<UserResponseDto>();
@@ -98,10 +93,9 @@ public class UserServiceImpl implements UserService   {
 		userResponseDto.setId(user.getId());
 		userResponseDto.setUserName(user.getUserName());
 		userResponseDto.setPhoneNumber(user.getPhoneNumber());
-		userResponseDto.setStatus(user.getStatus());
-		userResponseDto.setUserDetails(user.getUserDetails());	
-		if (user != null && user.getId() != null && user.getRoleId() != null) {
-			userResponseDto.setRoleName(roleMasterRepository.getById(user.getRoleId()).getRoleName());
+		userResponseDto.setStatus(user.isStatus());
+		if (user != null && user.getId() != null && user.getRole() != null) {
+			userResponseDto.setRoleName(user.getRole().getRoleName());
 		}
 
 		return userResponseDto;
@@ -120,22 +114,22 @@ public class UserServiceImpl implements UserService   {
 			// user 
 			user.setUserName(userRequestDto.getUserName());
 			user.setPhoneNumber(userRequestDto.getPhoneNumber());
-			user.setStatus(userRequestDto.getStatus());
-			user.setRoleId(userRequestDto.getRoleId());
+			user.setGender(userRequestDto.getGender());
+			user.setAddress1(userRequestDto.getAddress1());
+			user.setAddress2(userRequestDto.getAddress2());
+			user.setStatus(userRequestDto.isStatus());
+			user.setRole(roleMasterRepository.getById(userRequestDto.getRoleId()));
 			if (user.getPassword() == null) {
 				String newPasswordEnc = (userRequestDto.getPassword().trim());
 				
 				user.setPassword(passwordEncoder.encode(newPasswordEnc));
 			}			
 			//user
-			// userdetails
-			UserDetails userDetails = new UserDetails();
-			pouplateUserDetails(user,userRequestDto,userDetails);
-			// userdetails
+	
 			// hospital details
 			if( null != userRequestDto.getHospitalId()) {
-				HospitalDetails hospitalDetails = hospitalDetailsRepository.getById(userRequestDto.getHospitalId());
-				user.setHospitalDetails(hospitalDetails);				
+				Hospital hospitalDetails = hospitalDetailsRepository.getById(userRequestDto.getHospitalId());
+				user.setHospital(hospitalDetails);				
 			}
 			// hospital details
 			userRepository.save(user);
@@ -150,23 +144,6 @@ public class UserServiceImpl implements UserService   {
 		}
 	}
 
-
-	private void pouplateUserDetails(User userMaster, UserRequestDto userMasterRequestDto,UserDetails userDetails) {
-		userDetails.setAddressLine1(userMasterRequestDto.getUserDetails().getAddressLine1());
-		userDetails.setAddressLine2(userMasterRequestDto.getUserDetails().getAddressLine2());
-		userDetails.setDistrictId(userMasterRequestDto.getUserDetails().getDistrictId());
-		userDetails.setFirstName(userMasterRequestDto.getUserDetails().getFirstName());
-		userDetails.setLastName(userMasterRequestDto.getUserDetails().getLastName());
-		userDetails.setMiddleName(userMasterRequestDto.getUserDetails().getMiddleName());
-		userDetails.setNationality(userMasterRequestDto.getUserDetails().getNationality());
-		userDetails.setSalutationId(userMasterRequestDto.getUserDetails().getSalutationId());
-		userDetails.setStateId(userMasterRequestDto.getUserDetails().getStateId());
-		userDetails.setTalukId(userMasterRequestDto.getUserDetails().getTalukId());
-		userMaster.setUserDetails(userDetails);
-		
-	}
-
-
 	public GenericResponse updateUser(UserRequestDto userRequestDto) {
 		UserValidator.createUserValidator(userRequestDto);
 		if (userRequestDto != null && userRequestDto.getId() != null) {
@@ -174,18 +151,17 @@ public class UserServiceImpl implements UserService   {
 
 			if (user != null && user.getId() != null) {
 				
-				UserDetails userDetails = user.getUserDetails();
+				
 				
 //				user.setUserName(userRequestDto.getUserName());
 				user.setPhoneNumber(userRequestDto.getPhoneNumber());
-				user.setStatus(userRequestDto.getStatus());
-				user.setRoleId(userRequestDto.getRoleId());
+				user.setStatus(userRequestDto.isStatus());
+				user.setRole(roleMasterRepository.getById(userRequestDto.getRoleId()));
 				if (user.getPassword() == null) {
 					String newPasswordEnc = (userRequestDto.getPassword().trim());
 					
 					user.setPassword(passwordEncoder.encode(newPasswordEnc));
 				}			
-				pouplateUserDetails(user,userRequestDto,userDetails);
 	
 				userRepository.save(user);
 				return Library.getSuccessfulResponse(convertUserEntityToDto(user),
@@ -204,7 +180,7 @@ public class UserServiceImpl implements UserService   {
 	public GenericResponse deleteUser(Long id) {
 		User user = userRepository.getById(id);
 		if (user != null && user.getId() != null) {
-			user.setStatus("Inactive");
+			user.setStatus(false);
 			userRepository.save(user);
 			return Library.getSuccessfulResponse(null,
 					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_DELETED);

@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Api(value = "User Management")
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/usermanager")
 @CrossOrigin
+@Log4j2
 public class UserManagementController {
 
 	@Autowired
@@ -63,7 +65,7 @@ public class UserManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteUser", method = RequestMethod.PUT)
 	@ApiOperation(value = "delete user by id", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> deleteUser(@RequestParam Long userId) throws Exception {
 		GenericResponse objGenericResponse = userService.deleteUser(userId);

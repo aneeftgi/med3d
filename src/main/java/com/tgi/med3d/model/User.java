@@ -26,6 +26,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,7 +42,7 @@ import lombok.ToString;
 @Entity
 @Data
 @Table(name = "user")
-public class User implements Serializable{
+public class User extends Trackable{
 
 	/**
 	 * 
@@ -56,24 +57,31 @@ public class User implements Serializable{
 	private String userName;          
 	
 	@Column(name = "phone_number")
-	private long phoneNumber;
+	private String phoneNumber;
+	
+	@Column(name = "gender")
+	private String gender;
 
 	@JsonIgnore
 	@Column(name = "password")
 	private String password;		
+		
+	@Column(name = "status",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean status;
 	
-	@Column(name = "role_id")
-	private Long roleId;
+	@Column(name = "address_1")
+	private String address1;	
 	
-	@Column(name = "status")
-	private String status;
+	@Column(name = "address_2")
+	private String address2;	
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="user_details_id")
-	private UserDetails userDetails;
+	@JoinColumn(name="role_id")
+	private Role role;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="hospital_details_id")
-	private HospitalDetails hospitalDetails;
+	@JoinColumn(name="hospital_id")
+	private Hospital hospital;
 	
 }

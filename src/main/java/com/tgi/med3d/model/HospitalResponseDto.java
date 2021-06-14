@@ -22,12 +22,8 @@ public class HospitalResponseDto implements Serializable{
 	private String userName; 
 	
 	private String roleName;
-	
-	private long phoneNumber;	
-	
-	private String status;
-	
-	private HospitalDetails hospitalDetails;	
+			
+	private Hospital hospitalDetails;	
 	
 	
 }

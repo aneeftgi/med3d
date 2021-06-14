@@ -25,8 +25,8 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-@Table(name = "role_master")
-public class RoleMaster implements Serializable{
+@Table(name = "role")
+public class Role implements Serializable{
 
 	private static final long serialVersionUID = -7159367709179977596L;
 
@@ -36,7 +36,6 @@ public class RoleMaster implements Serializable{
 
 	@Column(name = "role_name")
 	private String roleName;
-	
 
 
 }

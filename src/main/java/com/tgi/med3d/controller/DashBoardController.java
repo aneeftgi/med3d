@@ -20,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.log4j.Log4j2;
 
 
 @RestController
@@ -31,6 +32,7 @@ import io.swagger.annotations.ApiResponses;
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
 @RequestMapping("/dashBoard")
+@Log4j2
 public class DashBoardController {		
 	
 	@Autowired

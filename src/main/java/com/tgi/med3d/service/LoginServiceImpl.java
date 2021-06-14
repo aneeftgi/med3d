@@ -32,7 +32,7 @@ import com.tgi.med3d.exception.InvalidUserValidation;
 import com.tgi.med3d.model.User;
 import com.tgi.med3d.model.LoginRequestDto;
 import com.tgi.med3d.model.LoginResponseDto;
-import com.tgi.med3d.repository.RoleMasterRepository;
+import com.tgi.med3d.repository.RoleRepository;
 import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
@@ -47,7 +47,7 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 	UserRepository userRepository;	
 	
 	@Autowired
-	RoleMasterRepository roleMasterRepository;
+	RoleRepository roleMasterRepository;
 
 	
 	@Autowired
@@ -72,7 +72,7 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 	    	if(user==null) {
 				throw new RuntimeException("User not found: " + username);
 			}
-	        GrantedAuthority authority = new SimpleGrantedAuthority(roleMasterRepository.getById(user.getRoleId()).getRoleName());
+	        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName());
 	        
 	        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), Arrays.asList(authority));
 	    }
@@ -84,8 +84,7 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 		LoginResponseDto userLoginResponseDto = new LoginResponseDto();
         User user = userRepository.findByUserName(userLoginRequestDto.getUserName());
         if(user!=null) {
-        String userStaus = user.getStatus();
-        if(!Library.isNullOrEmpty(userStaus) && userStaus.equals(UserStatus.Active.name()) ) {
+        if(user.isStatus()) {
         	
 		log.info("========== INSIDE login METHOD Bearer ==========");
 
@@ -124,8 +123,8 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 			userLoginResponseDto.setExpiresIn(node.path("expires_in").asText());
 			userLoginResponseDto.setRefreshToken(node.path("refresh_token").asText());
 			userLoginResponseDto.setUserName(username);
-			userLoginResponseDto.setRoleName(roleMasterRepository.getById(user.getRoleId()).getRoleName());
-					return Library.getSuccessfulResponse(userLoginResponseDto,
+			userLoginResponseDto.setRoleName(user.getRole().getRoleName());
+								return Library.getSuccessfulResponse(userLoginResponseDto,
 							ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.LOGIN_AUTHORIZED);		}
 		else {
 			return Library.getSuccessfulResponse(null, ErrorCode.UNAUTHORIZED.getErrorCode(),

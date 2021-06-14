@@ -22,10 +22,9 @@ public class UserResponseDto implements Serializable{
 	
 	private String roleName;
 	
-	private long phoneNumber;	
+	private String phoneNumber;	
 	
-	private String status;
+	private boolean status;
 	
-	private UserDetails userDetails;		
 	
 }

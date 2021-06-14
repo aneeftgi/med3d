@@ -24,6 +24,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Api(value = "Authentication")
@@ -35,6 +36,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/authentication")
 @CrossOrigin
+@Log4j2
 public class AuthenticationController {
 
 	@Autowired

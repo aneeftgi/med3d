@@ -21,6 +21,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Api(value = "Hospital Management")
@@ -32,6 +33,7 @@ import io.swagger.annotations.ApiResponses;
 
 //@CrossOrigin(origins ="http://localhost:3000/")
 @RequestMapping("/hospitalManager")
+@Log4j2
 public class HospitalManagementController {
 
 	@Autowired
@@ -62,7 +64,7 @@ public class HospitalManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/deleteHospital", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteHospital", method = RequestMethod.PUT)
 	@ApiOperation(value = "delete hospital by id", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> deleteHospital(@RequestParam Long hospitalId) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.deleteHospital(hospitalId);

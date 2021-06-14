@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Api(value = "Role Management")
@@ -29,6 +30,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/rolemanager")
 @CrossOrigin
+@Log4j2
 public class RoleManagementController {
 
 	@Autowired

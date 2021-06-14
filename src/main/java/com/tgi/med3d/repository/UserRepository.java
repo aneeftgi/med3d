@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	
 	User findByUserName(String userName);
 	
-	@Query("select u from User u where u.hospitalDetails.id=:hospital_id")
+	@Query("select u from User u where u.hospital.id=:hospital_id")
 	List<User> getUserByHospitalDetailsId(@Param("hospital_id") Long hospitalId);
 	
 	@Query("select count(*) as totalUsers, \r\n"
@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	@Query("select count(*) as totoalUsers, \r\n"
 			+ "COALESCE(sum(case when u.status='Active' then 1 else 0 end),0) as activeUsers,\r\n"
 			+ "COALESCE(sum(case when u.status='Inactive' then 1 else 0 end),0) as inActiveUsers \r\n"
-			+ "from User u where u.hospitalDetails.id=:hospital_id")
+			+ "from User u where u.hospital.id=:hospital_id")
 	List<Object[]> getHospitalUserCount(@Param("hospital_id") Long hospitalId);
 
 }

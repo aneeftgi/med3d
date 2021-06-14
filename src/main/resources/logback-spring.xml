@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+ 
+	<!-- log location configured in property file as per the environment -->
+ 	<springProperty scope="context" name="LOGS" source="application.log.location"/>
+ 	
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+ 
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/application.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+ 
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/application-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+<!--         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/> -->
+    </appender>
+     
+    <!-- LOG everything at INFO level -->
+    <springProfile name="local,dev,test,docker,SIT,UAT">
+	    <root level="info">
+	        <appender-ref ref="RollingFile" />
+	        <appender-ref ref="Console" />
+	    </root>
+	</springProfile>    
+ 
+    <!-- LOG "com.tgi*" at TRACE level -->
+	<springProfile name="local,dev,test,docker,SIT,UAT">
+	    <logger name="com.tgi" level="trace,debug" additivity="false">
+	        <appender-ref ref="RollingFile" />
+	        <appender-ref ref="Console" />
+	    </logger>
+	</springProfile> 
+	   
+<!-- 	<springProfile name="prod">
+	    <logger name="com.oasys" level="error" additivity="false">
+	        <appender-ref ref="RollingFile" />
+	        <appender-ref ref="Console" />
+	    </logger>
+	</springProfile>    -->    
+ 
+</configuration>
