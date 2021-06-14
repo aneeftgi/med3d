@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -26,20 +27,25 @@ public class Trackable implements Serializable {
 
 	private static final long serialVersionUID = 1346562084432072428L;
 	
+	@JsonIgnore
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_date")
 	public Date createdDate;
 	
+	@JsonIgnore
 	@CreatedBy
 	@Column(name = "created_by")
 	public Long createdBy;
 	
+	@JsonIgnore
 	@LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modified_date")
 	public Date modifiedDate;
 	
+	
+	@JsonIgnore
 	@LastModifiedBy
 	@Column(name = "modified_by")
 	public Long modifiedBy;

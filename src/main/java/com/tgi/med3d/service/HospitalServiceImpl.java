@@ -70,18 +70,21 @@ public class HospitalServiceImpl implements HospitalService  {
 			throw new RecordNotFoundException();
 		}
 	}	
-//		private HospitalResponseDto convertUserEntityToDto(User user) {		
-//			HospitalResponseDto hospitalResponseDto = new HospitalResponseDto();
-//			userResponseDto.setId(user.getId());
-//			userResponseDto.setUserName(user.getUserName());
-//			userResponseDto.setPhoneNumber(user.getPhoneNumber());
-//			userResponseDto.setStatus(user.isStatus());
-//			if (user != null && user.getId() != null && user.getRole() != null) {
-//				userResponseDto.setRoleName(user.getRole().getRoleName());
-//			}
-//
-//			return userResponseDto;
-//		}
+		private HospitalResponseDto convertUserEntityToDto(User user, Hospital hospital) {		
+			HospitalResponseDto hospitalResponseDto = new HospitalResponseDto();
+			hospitalResponseDto.setUserId(user.getId());
+			hospitalResponseDto.setUserName(user.getUserName());
+			hospitalResponseDto.setHospitalName(hospital.getHospitalName());
+			hospitalResponseDto.setHospitalStatus(hospital.isHospitalStatus());
+			hospitalResponseDto.setAddress1(hospital.getAddress1());
+			hospitalResponseDto.setAddress2(hospital.getAddress2());
+			hospitalResponseDto.setContactNumber(hospital.getContactNumber());
+			if (user != null && user.getId() != null && user.getRole() != null) {
+				hospitalResponseDto.setRoleName(user.getRole().getRoleName());
+			}
+
+			return hospitalResponseDto;
+		}
 			
 	@SuppressWarnings("unused")
 	public GenericResponse addHospital(HospitalRequestDto hospitalRequestDto) {
@@ -109,7 +112,7 @@ public class HospitalServiceImpl implements HospitalService  {
 			// hospital details
 			
 			userRepository.save(user);
-			return Library.getSuccessfulResponse(hospitalDetails,
+			return Library.getSuccessfulResponse(convertUserEntityToDto(user,hospitalDetails),
 					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_CREATED);
 						
 		} else {
@@ -144,7 +147,7 @@ public class HospitalServiceImpl implements HospitalService  {
 			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 						
 			userRepository.save(user);
-			return Library.getSuccessfulResponse(user,
+			return Library.getSuccessfulResponse(convertUserEntityToDto(user,hospitalDetails),
 						ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_UPDATED);
 			} else {
 				throw new RecordNotFoundException("User is not available");
