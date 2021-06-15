@@ -5,6 +5,8 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -42,6 +44,8 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 public class LoginServiceImpl implements UserDetailsService, LoginService{
+	
+	private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 	@Autowired
 	UserRepository userRepository;	
@@ -80,6 +84,7 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 	@SuppressWarnings("unused")
 	public GenericResponse login(LoginRequestDto userLoginRequestDto, HttpSession httpSession,
 			HttpServletRequest httpServletRequest) throws JSONException, JsonMappingException, JsonProcessingException,InvalidUserValidation {
+		log.debug("login starts");
 		
 		LoginResponseDto userLoginResponseDto = new LoginResponseDto();
         User user = userRepository.findByUserName(userLoginRequestDto.getUserName());
@@ -124,21 +129,27 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 			userLoginResponseDto.setRefreshToken(node.path("refresh_token").asText());
 			userLoginResponseDto.setUserName(username);
 			userLoginResponseDto.setRoleName(user.getRole().getRoleName());
-								return Library.getSuccessfulResponse(userLoginResponseDto,
-							ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.LOGIN_AUTHORIZED);		}
+			
+			}
 		else {
+	        log.info("UNAUTHORIZED");
 			return Library.getSuccessfulResponse(null, ErrorCode.UNAUTHORIZED.getErrorCode(),
 					ErrorMessages.LOGIN_UNAUTHORIZED);
 		}
         }
 		else {
+			log.error("User not active");
 			throw new InvalidDataValidation("User is not active");
 		}
 		
         }
 		else {
+			log.error("User not found");
 			throw new InvalidDataValidation("User is not available");
 		}
+        log.debug("login ends");
+		return Library.getSuccessfulResponse(userLoginResponseDto,
+	ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.LOGIN_AUTHORIZED);		
 	}
 
 

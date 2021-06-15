@@ -7,6 +7,8 @@ import java.util.ListIterator;
 import java.util.Optional;
 
 import org.jasypt.digest.StringDigester;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,6 +38,8 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 public class UserServiceImpl implements UserService   {
+	
+	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	UserRepository userRepository;
@@ -45,46 +49,58 @@ public class UserServiceImpl implements UserService   {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
 	
 	@Autowired
 	HospitalRepository hospitalDetailsRepository;
 
 	
 	public GenericResponse getAllUser() {
+		log.debug("getAllUser starts");
 		List<User> userList = userRepository.findAll();
+		List<UserResponseDto> userResponseDtoList = new ArrayList<UserResponseDto>();
 		if (userList.size() > 0) 
 			userList.remove(0);
 		if (userList.size() > 0) {
-			List<UserResponseDto> userResponseDtoList = new ArrayList<UserResponseDto>();
 			userList.forEach(um -> {
 				if(um.isStatus())
 				userResponseDtoList.add(convertUserEntityToDto(um));
 			});
-			return Library.getSuccessfulResponse(userResponseDtoList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
-					ErrorMessages.RECORED_FOUND);
+			
 		} else {
+			log.error("No record found");
 			throw new RecordNotFoundException();
 		}
+		log.debug("getAllUser ends");
+		return Library.getSuccessfulResponse(userResponseDtoList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
+				ErrorMessages.RECORED_FOUND);
 	}
 	
 	public GenericResponse getUserByHospitalId(Long hospitalId) {
+		log.debug("getUserByHospitalId starts");
+
 		Hospital hospitalDetails = hospitalDetailsRepository.getById(hospitalId);
+		List<UserResponseDto> userResponseDtoList = new ArrayList<UserResponseDto>();
+
 		if(hospitalDetails!=null && hospitalDetails.isHospitalStatus()) {
 		List<User> userList = userRepository.getUserByHospitalDetailsId(hospitalId);
 		if (userList.size() > 0) {
-			List<UserResponseDto> userResponseDtoList = new ArrayList<UserResponseDto>();
 			userList.forEach(um -> {
 				userResponseDtoList.add(convertUserEntityToDto(um));
 			});
-			return Library.getSuccessfulResponse(userResponseDtoList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
-					ErrorMessages.RECORED_FOUND);
+			
 		} else {
+			log.error("No record found");
 			throw new RecordNotFoundException();
 		}
 		} else {
+			log.error("No record found");
 			throw new RecordNotFoundException();
 		}
+		
+		log.debug("getUserByHospitalId ends");
+
+		return Library.getSuccessfulResponse(userResponseDtoList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
+				ErrorMessages.RECORED_FOUND);
 		}
 
 
@@ -103,13 +119,14 @@ public class UserServiceImpl implements UserService   {
 		
 	@SuppressWarnings("unused")
 	public GenericResponse addUser(UserRequestDto userRequestDto) {
+		log.debug("addUser starts");
 
 		UserValidator.createUserValidator(userRequestDto);
 		isUserExists(userRequestDto.getUserName());
+		User user = new User();
 
 		if (userRequestDto != null) {
 	
-			User user = new User();
 			/* user save starts */
 			// user 
 			user.setUserName(userRequestDto.getUserName());
@@ -136,15 +153,20 @@ public class UserServiceImpl implements UserService   {
 			
 			/* user save ends */
 					
-			return Library.getSuccessfulResponse(convertUserEntityToDto(user),
-					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_CREATED);
+			
 						
 		} else {
+			log.error("Invalid data");
 			throw new InvalidDataValidation();
 		}
+		log.debug("addUser ends");
+		return Library.getSuccessfulResponse(convertUserEntityToDto(user),
+				ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_CREATED);
 	}
 
 	public GenericResponse updateUser(UserRequestDto userRequestDto) {
+		log.debug("updateUser starts");
+
 		UserValidator.createUserValidator(userRequestDto);
 		if (userRequestDto != null && userRequestDto.getId() != null) {
 			User user = userRepository.getById(userRequestDto.getId());		
@@ -164,29 +186,38 @@ public class UserServiceImpl implements UserService   {
 				}			
 	
 				userRepository.save(user);
+				log.debug("updateUser ends");
 				return Library.getSuccessfulResponse(convertUserEntityToDto(user),
 						ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_UPDATED);
 			} else {
+				log.error("User Not found" );
 				throw new RecordNotFoundException("User not available");
 			}
 			
 		} else {
+			log.error("No record found" );
 			throw new RecordNotFoundException();
 		}
+		
 	}
 
 
 
 	public GenericResponse deleteUser(Long id) {
+		log.debug("deleteUser starts");
+
 		User user = userRepository.getById(id);
 		if (user != null && user.getId() != null) {
 			user.setStatus(false);
 			userRepository.save(user);
-			return Library.getSuccessfulResponse(null,
-					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_DELETED);
+			
 		} else {
+			log.error("No record found");
 			throw new RecordNotFoundException();
 		}
+		log.debug("deleteUser ends");
+		return Library.getSuccessfulResponse(null,
+				ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_DELETED);
 	}
 
 private void isUserExists(String userName) {
@@ -197,10 +228,6 @@ private void isUserExists(String userName) {
 		
 	}
 	
-
-
-
-
 	
 
 }

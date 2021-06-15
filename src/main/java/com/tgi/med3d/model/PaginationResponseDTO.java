@@ -13,6 +13,6 @@ public class PaginationResponseDTO {
 
 	Integer TotalPages;
 
-	List<Hospital> Contents;
+	List<Object> Contents;
 
 }

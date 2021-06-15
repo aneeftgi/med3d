@@ -21,14 +21,14 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	List<User> getUserByHospitalDetailsId(@Param("hospital_id") Long hospitalId);
 	
 	@Query("select count(*) as totalUsers, \r\n"
-			+ "COALESCE(sum(case when u.status='Active' then 1 else 0 end),0) as activeUsers,\r\n"
-			+ "COALESCE(sum(case when u.status='Inactive' then 1 else 0 end),0) as inActiveUsers \r\n"
+			+ "COALESCE(sum(case when u.status='1' then 1 else 0 end),0) as activeUsers,\r\n"
+			+ "COALESCE(sum(case when u.status='0' then 1 else 0 end),0) as inActiveUsers \r\n"
 			+ "from User u")	
 	List<Object[]> getAllUserCount();	
 	
 	@Query("select count(*) as totoalUsers, \r\n"
-			+ "COALESCE(sum(case when u.status='Active' then 1 else 0 end),0) as activeUsers,\r\n"
-			+ "COALESCE(sum(case when u.status='Inactive' then 1 else 0 end),0) as inActiveUsers \r\n"
+			+ "COALESCE(sum(case when u.status='1' then 1 else 0 end),0) as activeUsers,\r\n"
+			+ "COALESCE(sum(case when u.status='0' then 1 else 0 end),0) as inActiveUsers \r\n"
 			+ "from User u where u.hospital.id=:hospital_id")
 	List<Object[]> getHospitalUserCount(@Param("hospital_id") Long hospitalId);
 

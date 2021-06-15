@@ -2,11 +2,14 @@ package com.tgi.med3d.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
 import org.jasypt.digest.StringDigester;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,8 +44,9 @@ import com.tgi.med3d.validation.UserValidator;
 import lombok.extern.log4j.Log4j2;
 
 @Service
-@Log4j2
 public class HospitalServiceImpl implements HospitalService  {
+	
+	private static final Logger log = LoggerFactory.getLogger(HospitalServiceImpl.class);
 
 	@Autowired
 	UserRepository userRepository;
@@ -59,16 +63,20 @@ public class HospitalServiceImpl implements HospitalService  {
 
 	 @Override
 	public GenericResponse getAllHospital() {
+		 log.debug("getAllHospital starts");
 		List<Hospital> hospitalDetailsList = hospitalDetailsRepository.findAll();
 		if (hospitalDetailsList.size() > 0) {
 			
-			hospitalDetailsList.removeIf((Hospital Hd)-> Hd.isHospitalStatus()==false);
-
-			return Library.getSuccessfulResponse(hospitalDetailsList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
-					ErrorMessages.RECORED_FOUND);
+			hospitalDetailsList.removeIf((Hospital Hd)-> Hd.isHospitalStatus()==false);			
+			
 		} else {
+			log.error("No Record Found");
 			throw new RecordNotFoundException();
 		}
+		log.debug("getAllHospital ends");
+		return Library.getSuccessfulResponse(hospitalDetailsList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
+				ErrorMessages.RECORED_FOUND);
+		
 	}	
 		private HospitalResponseDto convertUserEntityToDto(User user, Hospital hospital) {		
 			HospitalResponseDto hospitalResponseDto = new HospitalResponseDto();
@@ -88,12 +96,13 @@ public class HospitalServiceImpl implements HospitalService  {
 			
 	@SuppressWarnings("unused")
 	public GenericResponse addHospital(HospitalRequestDto hospitalRequestDto) {
-
+		log.debug("addHospital starts");
 		HospitalValidator.createHospitalValidator(hospitalRequestDto);
 		isUserExists(hospitalRequestDto.getUserName());
+		Hospital hospitalDetails = new Hospital();
+		User user = new User();
 
 		if (hospitalRequestDto != null) {
-			User user = new User();
 			
 			/* user save starts */
 			// user 
@@ -107,17 +116,19 @@ public class HospitalServiceImpl implements HospitalService  {
 			}			
 			//user
 			// hospital details
-			Hospital hospitalDetails = new Hospital();
 			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 			// hospital details
 			
 			userRepository.save(user);
-			return Library.getSuccessfulResponse(convertUserEntityToDto(user,hospitalDetails),
-					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_CREATED);
+			
 						
 		} else {
+			log.error("Invalid data");
 			throw new InvalidDataValidation();
 		}
+		log.debug("addHospital ends");
+		return Library.getSuccessfulResponse(convertUserEntityToDto(user,hospitalDetails),
+				ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_CREATED);
 	}
 
 	 private void pouplateHospitalDetails(User userMaster, HospitalRequestDto
@@ -135,6 +146,7 @@ public class HospitalServiceImpl implements HospitalService  {
 			  
 			  }
 	public GenericResponse updateHospital(HospitalRequestDto hospitalRequestDto) {
+		log.debug("updateHospital starts");
 		HospitalValidator.createHospitalValidator(hospitalRequestDto);
 
 		if (hospitalRequestDto != null && hospitalRequestDto.getId() != null) {
@@ -147,19 +159,23 @@ public class HospitalServiceImpl implements HospitalService  {
 			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 						
 			userRepository.save(user);
+			log.debug("updateHospital ends");
 			return Library.getSuccessfulResponse(convertUserEntityToDto(user,hospitalDetails),
 						ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_UPDATED);
 			} else {
+				log.error("User Not Found");
 				throw new RecordNotFoundException("User is not available");
 			}
 			
 		} else {
+			log.error("Record Not Found");
 			throw new RecordNotFoundException();
 		}
 	}
 
 
 	public GenericResponse deleteHospital(Long id) {
+		log.debug("deleteHospital starts");
 		Hospital hospitalDetails = hospitalDetailsRepository.getById(id);
 		if (hospitalDetails != null && hospitalDetails.getId() != null) {
 			
@@ -178,11 +194,14 @@ public class HospitalServiceImpl implements HospitalService  {
 			}
 			//Hospital users Inactive
 
-			return Library.getSuccessfulResponse(null,
-					ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_DELETED);
+			
 		} else {
+			log.error("Record Not Found");
 			throw new RecordNotFoundException();
 		}
+		log.debug("deleteHospital ends");
+		return Library.getSuccessfulResponse(null,
+				ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_DELETED);
 	}
 	
 private void isUserExists(String userName) {
@@ -195,29 +214,57 @@ private void isUserExists(String userName) {
 
 @Override
 public GenericResponse searchHospital(String search, int pageNo, int pageSize) {
+	log.debug("searchHospital starts");
+	PaginationResponseDTO paginationResponseDTO = new PaginationResponseDTO();
 	if(pageNo>=0 &&  pageSize>0) {
 		Pageable pageableRequest = PageRequest.of(pageNo,pageSize,Sort.Direction.ASC,"id");
-		Page<Hospital> hp;
+		Page<Object> hp;
 		if(search == null)
-			hp = hospitalDetailsRepository.findAll(pageableRequest);
+			hp = hospitalDetailsRepository.searchAllHospital(pageableRequest);
 		else
 		 hp = hospitalDetailsRepository.findByHospitalName(search, pageableRequest);
 	if(hp!=null) {		
-		PaginationResponseDTO paginationResponseDTO = new PaginationResponseDTO();
-		paginationResponseDTO.setContents(hp.getContent());
+		paginationResponseDTO.setContents(convertObjectEntityToDto(hp.getContent()));
 		paginationResponseDTO.setNumberOfElements(hp.getNumberOfElements());
 		paginationResponseDTO.setTotalElements(hp.getTotalElements());
 		paginationResponseDTO.setTotalPages(hp.getTotalPages());
-		return Library.getSuccessfulResponse(paginationResponseDTO, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
-				ErrorMessages.RECORED_FOUND);
+	
 	}
 	else {
+		log.error("Record Not Found");
 		throw new RecordNotFoundException();
 	}
 	}
-	else 
+	else {
+		log.error("Invalid data");
 		throw new InvalidDataValidation();
+	}
+	log.debug("searchHospital ends");
+	return Library.getSuccessfulResponse(paginationResponseDTO, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
+			ErrorMessages.RECORED_FOUND);
+}
+
+private List<Object> convertObjectEntityToDto(List<Object> obj) {		
+	List<Object> objList = new ArrayList<Object>();
 	
+		obj.forEach(o->{
+			HospitalResponseDto hospitalResponseDto= new HospitalResponseDto();
+			User user = (User)o ;
+			//Hospital hospital = (Hospital)obj.get(1);
+			hospitalResponseDto.setUserId(user.getId());
+			hospitalResponseDto.setUserName(user.getUserName());
+			hospitalResponseDto.setHospitalName(user.getHospital().getHospitalName());
+			hospitalResponseDto.setHospitalStatus(user.getHospital().isHospitalStatus());
+			hospitalResponseDto.setAddress1(user.getHospital().getAddress1());
+			hospitalResponseDto.setAddress2(user.getHospital().getAddress2());
+			hospitalResponseDto.setContactNumber(user.getHospital().getContactNumber());
+			if (user != null && user.getId() != null && user.getRole() != null) {
+				hospitalResponseDto.setRoleName(user.getRole().getRoleName());
+			}
+			objList.add(hospitalResponseDto);
+		});		
+
+	return objList;
 }
 
 

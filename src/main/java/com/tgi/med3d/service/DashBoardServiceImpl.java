@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class DashBoardServiceImpl implements DashBoardService {
 	
+	private static final Logger log = LoggerFactory.getLogger(DashBoardServiceImpl.class);
+	
 	@Autowired
 	HospitalRepository hospitalDetailsRepository;
 	
@@ -31,6 +35,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	
 	@Override
 	public GenericResponse superAdminDashBoard() {
+		log.debug("superAdminDashBoard starts");
 		
 		DashBoardDetails dashBoardDetails= new DashBoardDetails();
 		List<Object[]>  userCount = userRepository.getAllUserCount();		
@@ -51,13 +56,15 @@ public class DashBoardServiceImpl implements DashBoardService {
 				dashBoardDetails.setInActiveHospitalCount((long)record[2]);
 			});
 			}
-		
+		log.debug("superAdminDashBoard ends");
 			return Library.getSuccessfulResponse(dashBoardDetails, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
 					ErrorMessages.RECORED_FOUND);
 	}
 
 	@Override
 	public GenericResponse hospitalDashBoard(Long hospitalId) {
+		log.debug("hospitalDashBoard starts");
+
 		DashBoardDetails dashBoardDetails= new DashBoardDetails();
 
 		Hospital hospitalDetails = hospitalDetailsRepository.getById(hospitalId);
@@ -72,12 +79,14 @@ public class DashBoardServiceImpl implements DashBoardService {
 		});
 		}
 		
-		return Library.getSuccessfulResponse(dashBoardDetails, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
-			ErrorMessages.RECORED_FOUND);
 		}
-	else 
+	else {
+		log.error("No record found");
 	throw new RecordNotFoundException();
 	}
-
+	log.debug("hospitalDashBoard starts");
+	return Library.getSuccessfulResponse(dashBoardDetails, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
+		ErrorMessages.RECORED_FOUND);
+	}
 
 }
