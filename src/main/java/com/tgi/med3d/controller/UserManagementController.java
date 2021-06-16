@@ -31,7 +31,6 @@ import lombok.extern.log4j.Log4j2;
 
 @RequestMapping("/usermanager")
 @CrossOrigin
-@Log4j2
 public class UserManagementController {
 
 	@Autowired
@@ -65,7 +64,7 @@ public class UserManagementController {
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/deleteUser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
 	@ApiOperation(value = "delete user by id", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> deleteUser(@RequestParam Long userId) throws Exception {
 		GenericResponse objGenericResponse = userService.deleteUser(userId);

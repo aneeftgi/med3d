@@ -16,12 +16,9 @@ import com.tgi.med3d.repository.RoleRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
 
-import lombok.extern.log4j.Log4j2;
-
 @Service
-@Log4j2
 public class RoleServiceImpl implements RoleService {
-	private static final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
 
 	
 	@Autowired
@@ -29,18 +26,18 @@ public class RoleServiceImpl implements RoleService {
 	
 
 	public GenericResponse getAllRoles() {
-		log.debug("getAllRoles starts");
+		logger.debug("getAllRoles starts");
 		List<Role> roleMasterList =new ArrayList<Role>();
 		roleMasterList.add(roleMasterRepository.getById((long) 2));
 		roleMasterList.add(roleMasterRepository.getById((long) 3));
 		roleMasterList.add(roleMasterRepository.getById((long) 4));
 
 		if (roleMasterList.size() > 0) {
-			log.debug("getAllRoles ends");
+			logger.debug("getAllRoles ends");
 			return Library.getSuccessfulResponse(roleMasterList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
 					ErrorMessages.RECORED_FOUND);
 		} else {
-			log.error("Record not found");
+			logger.error("Record not found");
 			throw new RecordNotFoundException();
 		}
 	}

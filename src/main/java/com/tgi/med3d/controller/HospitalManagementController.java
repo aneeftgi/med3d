@@ -33,7 +33,6 @@ import lombok.extern.log4j.Log4j2;
 
 //@CrossOrigin(origins ="http://localhost:3000/")
 @RequestMapping("/hospitalManager")
-@Log4j2
 public class HospitalManagementController {
 
 	@Autowired

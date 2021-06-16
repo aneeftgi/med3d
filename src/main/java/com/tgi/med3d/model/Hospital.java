@@ -37,8 +37,7 @@ public class Hospital extends Trackable {
 	@Column(name = "hospital_name")
 	private String hospitalName;	
 		
-	@Column(name = "status",columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
+	@Column(name = "status")
 	private boolean hospitalStatus;
 	
 	@Column(name = "address_1")

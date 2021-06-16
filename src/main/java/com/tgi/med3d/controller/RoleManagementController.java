@@ -30,7 +30,6 @@ import lombok.extern.log4j.Log4j2;
 
 @RequestMapping("/rolemanager")
 @CrossOrigin
-@Log4j2
 public class RoleManagementController {
 
 	@Autowired

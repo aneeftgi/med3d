@@ -1,5 +1,6 @@
 package com.tgi.med3d.validation;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tgi.med3d.exception.InvalidDataValidation;
@@ -8,9 +9,7 @@ import com.tgi.med3d.model.UserRequestDto;
 import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.ValidatorUtil;
 
-import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 public class UserValidator {
 	@Autowired
 	UserRepository userRepository;
@@ -18,7 +17,7 @@ public class UserValidator {
 	public static void createUserValidator(UserRequestDto userRequestDto) {
 		Boolean valid=true;
 		StringBuilder errorMsg=new StringBuilder();
-		if(userRequestDto.getRoleId()==null || userRequestDto.getRoleId()==0) {
+		if(userRequestDto.getRoleId()==null || userRequestDto.getRoleId()<=1) {
 			valid=false;
 			errorMsg.append("Role Id is Required");
 		}else 

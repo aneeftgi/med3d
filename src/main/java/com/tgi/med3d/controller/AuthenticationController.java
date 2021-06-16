@@ -36,7 +36,6 @@ import lombok.extern.log4j.Log4j2;
 
 @RequestMapping("/authentication")
 @CrossOrigin
-@Log4j2
 public class AuthenticationController {
 
 	@Autowired

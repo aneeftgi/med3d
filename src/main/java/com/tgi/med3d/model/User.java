@@ -66,8 +66,7 @@ public class User extends Trackable{
 	@Column(name = "password")
 	private String password;		
 		
-	@Column(name = "status",columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
+	@Column(name = "status")
 	private boolean status;
 	
 	@Column(name = "address_1")

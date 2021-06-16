@@ -19,13 +19,11 @@ import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
 
-import lombok.extern.log4j.Log4j2;
 
 @Service
-@Log4j2
 public class DashBoardServiceImpl implements DashBoardService {
 	
-	private static final Logger log = LoggerFactory.getLogger(DashBoardServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(DashBoardServiceImpl.class);
 	
 	@Autowired
 	HospitalRepository hospitalDetailsRepository;
@@ -35,7 +33,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	
 	@Override
 	public GenericResponse superAdminDashBoard() {
-		log.debug("superAdminDashBoard starts");
+		logger.debug("superAdminDashBoard starts");
 		
 		DashBoardDetails dashBoardDetails= new DashBoardDetails();
 		List<Object[]>  userCount = userRepository.getAllUserCount();		
@@ -56,14 +54,14 @@ public class DashBoardServiceImpl implements DashBoardService {
 				dashBoardDetails.setInActiveHospitalCount((long)record[2]);
 			});
 			}
-		log.debug("superAdminDashBoard ends");
+		logger.debug("superAdminDashBoard ends");
 			return Library.getSuccessfulResponse(dashBoardDetails, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
 					ErrorMessages.RECORED_FOUND);
 	}
 
 	@Override
 	public GenericResponse hospitalDashBoard(Long hospitalId) {
-		log.debug("hospitalDashBoard starts");
+		logger.debug("hospitalDashBoard starts");
 
 		DashBoardDetails dashBoardDetails= new DashBoardDetails();
 
@@ -81,10 +79,10 @@ public class DashBoardServiceImpl implements DashBoardService {
 		
 		}
 	else {
-		log.error("No record found");
+		logger.error("No record found");
 	throw new RecordNotFoundException();
 	}
-	log.debug("hospitalDashBoard starts");
+	logger.debug("hospitalDashBoard starts");
 	return Library.getSuccessfulResponse(dashBoardDetails, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
 		ErrorMessages.RECORED_FOUND);
 	}

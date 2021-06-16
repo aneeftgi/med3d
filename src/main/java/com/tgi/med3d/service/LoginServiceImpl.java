@@ -2,6 +2,7 @@ package com.tgi.med3d.service;
 
 
 import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -22,30 +23,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tgi.med3d.constant.ErrorCode;
 import com.tgi.med3d.constant.ErrorMessages;
-import com.tgi.med3d.enums.UserStatus;
 import com.tgi.med3d.exception.InvalidDataValidation;
 import com.tgi.med3d.exception.InvalidUserValidation;
-import com.tgi.med3d.model.User;
 import com.tgi.med3d.model.LoginRequestDto;
 import com.tgi.med3d.model.LoginResponseDto;
+import com.tgi.med3d.model.User;
 import com.tgi.med3d.repository.RoleRepository;
 import com.tgi.med3d.repository.UserRepository;
 import com.tgi.med3d.utility.GenericResponse;
 import com.tgi.med3d.utility.Library;
 
-import lombok.extern.log4j.Log4j2;
-
 @Service
-@Log4j2
 public class LoginServiceImpl implements UserDetailsService, LoginService{
 	
-	private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 	@Autowired
 	UserRepository userRepository;	
@@ -84,20 +82,20 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 	@SuppressWarnings("unused")
 	public GenericResponse login(LoginRequestDto userLoginRequestDto, HttpSession httpSession,
 			HttpServletRequest httpServletRequest) throws JSONException, JsonMappingException, JsonProcessingException,InvalidUserValidation {
-		log.debug("login starts");
+		logger.debug("login starts");
 		
 		LoginResponseDto userLoginResponseDto = new LoginResponseDto();
         User user = userRepository.findByUserName(userLoginRequestDto.getUserName());
         if(user!=null) {
         if(user.isStatus()) {
         	
-		log.info("========== INSIDE login METHOD Bearer ==========");
+        	logger.info("========== INSIDE login METHOD Bearer ==========");
 
 		String username = userLoginRequestDto.getUserName();
  
 		String password = userLoginRequestDto.getPassword();
 
-		log.info("username : " + username);
+		logger.info("username : " + username);
 		HttpHeaders headers = new HttpHeaders();
 
 		String access_token_url = "http://";
@@ -118,7 +116,7 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 		response = restTemplate.exchange(access_token_url, HttpMethod.POST, entity, String.class);
 		System.out.println("Access Token Response ---------" + response.getBody());
 		if(response!=null) {
-			log.info(response.getBody());	
+			logger.info(response.getBody());	
 
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode node = mapper.readTree(response.getBody());
@@ -132,22 +130,22 @@ public class LoginServiceImpl implements UserDetailsService, LoginService{
 			
 			}
 		else {
-	        log.info("UNAUTHORIZED");
+			logger.info("UNAUTHORIZED");
 			return Library.getSuccessfulResponse(null, ErrorCode.UNAUTHORIZED.getErrorCode(),
 					ErrorMessages.LOGIN_UNAUTHORIZED);
 		}
         }
 		else {
-			log.error("User not active");
+			logger.error("User not active");
 			throw new InvalidDataValidation("User is not active");
 		}
 		
         }
 		else {
-			log.error("User not found");
+			logger.error("User not found");
 			throw new InvalidDataValidation("User is not available");
 		}
-        log.debug("login ends");
+        logger.debug("login ends");
 		return Library.getSuccessfulResponse(userLoginResponseDto,
 	ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.LOGIN_AUTHORIZED);		
 	}

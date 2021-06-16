@@ -17,7 +17,7 @@ public class HospitalResponseDto implements Serializable{
 	 */
 	private static final long serialVersionUID = -7157547015793301184L;
 
-	private Long userId;
+	private Long hospitalId;
 
 	private String userName; 
 	
@@ -33,5 +33,4 @@ public class HospitalResponseDto implements Serializable{
 
 	private String contactNumber;	
 
-	
 }
