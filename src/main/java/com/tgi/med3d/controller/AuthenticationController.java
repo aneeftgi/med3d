@@ -35,7 +35,6 @@ import lombok.extern.log4j.Log4j2;
 		@ApiResponse(code = 409, message = "Conflict occurred") })
 
 @RequestMapping("/authentication")
-@CrossOrigin
 public class AuthenticationController {
 
 	@Autowired

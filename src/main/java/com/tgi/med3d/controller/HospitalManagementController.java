@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tgi.med3d.model.Hospital;
 import com.tgi.med3d.model.HospitalRequestDto;
 import com.tgi.med3d.service.HospitalService;
 import com.tgi.med3d.utility.GenericResponse;
@@ -31,7 +32,6 @@ import lombok.extern.log4j.Log4j2;
 @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
-//@CrossOrigin(origins ="http://localhost:3000/")
 @RequestMapping("/hospitalManager")
 public class HospitalManagementController {
 
@@ -58,19 +58,18 @@ public class HospitalManagementController {
 	
 	@RequestMapping(value = "/updateHospital", method = RequestMethod.PUT)
 	@ApiOperation(value = "update hospital ", notes = "Returns HTTP 200 if successful get the record")
-	public ResponseEntity<Object> updateHospital(@RequestBody HospitalRequestDto hospitalMasterRequestDto) throws Exception {
+	public ResponseEntity<Object> updateHospital(@RequestBody Hospital hospitalMasterRequestDto) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.updateHospital(hospitalMasterRequestDto);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/deleteHospital", method = RequestMethod.PUT)
+	@RequestMapping(value = "/deleteHospital/{hospitalId}", method = RequestMethod.PUT)
 	@ApiOperation(value = "delete hospital by id", notes = "Returns HTTP 200 if successful get the record")
-	public ResponseEntity<Object> deleteHospital(@RequestParam Long hospitalId) throws Exception {
+	public ResponseEntity<Object> deleteHospital(@PathVariable Long hospitalId) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.deleteHospital(hospitalId);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
 	
-//	@CrossOrigin(origins ="http://localhost:3000/")
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	@ApiOperation(value = "search by hospital by name", notes = "Returns HTTP 200 if successful get the record")
 	public ResponseEntity<Object> searchHospital(@RequestParam(required=false) String search,

@@ -30,7 +30,6 @@ import lombok.extern.log4j.Log4j2;
 @ApiResponse(code = 409, message = "Conflict occurred") })
 
 @RequestMapping("/usermanager")
-@CrossOrigin
 public class UserManagementController {
 
 	@Autowired
@@ -70,6 +69,5 @@ public class UserManagementController {
 		GenericResponse objGenericResponse = userService.deleteUser(userId);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}
-	
 	
 }

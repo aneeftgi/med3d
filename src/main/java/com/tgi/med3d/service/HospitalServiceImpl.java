@@ -131,31 +131,32 @@ public class HospitalServiceImpl implements HospitalService  {
 			  userMaster.setHospital(hospitalDetails);
 			  
 			  }
-	public GenericResponse updateHospital(HospitalRequestDto hospitalRequestDto) {
+	public GenericResponse updateHospital(Hospital hospital) {
 		logger.debug("updateHospital starts");
-		HospitalValidator.createHospitalValidator(hospitalRequestDto);
+//		HospitalValidator.createHospitalValidator(hospital);
 
-		if (hospitalRequestDto != null && hospitalRequestDto.getId() != null) {
-			User user = userRepository.getById(hospitalRequestDto.getId());		
-
-			if (user != null && user.getId() != null) {
-				
-			Hospital hospitalDetails = user.getHospital();
-				
-			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
+		if (hospital != null && hospital.getId() != null) {
+			Hospital hospitalChk = hospitalDetailsRepository.getById(hospital.getId());
+//			User user = userRepository.getById(hospitalRequestDto.getId());		
+if(hospitalChk!=null) {
+//			if (user != null && user.getId() != null) {
+//				
+//			Hospital hospitalDetails = user.getHospital();
+//				
+//			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 						
-			userRepository.save(user);
+			hospitalDetailsRepository.save(hospital);
 			logger.debug("updateHospital ends");
-			return Library.getSuccessfulResponse(convertUserEntityToDto(user,hospitalDetails),
+			return Library.getSuccessfulResponse("Record Updated Successfully",
 						ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_UPDATED);
 			} else {
-				logger.error("User Not Found");
-				throw new RecordNotFoundException("User is not available");
+				logger.error("Hospital Not Found");
+				throw new RecordNotFoundException("Hospital Not Found");
 			}
 			
 		} else {
-			logger.error("Record Not Found");
-			throw new RecordNotFoundException();
+			logger.error("Invalid Data");
+			throw new InvalidDataValidation();
 		}
 	}
 
@@ -210,7 +211,7 @@ public GenericResponse searchHospital(String search, int pageNo, int pageSize) {
 		else
 		 hp = hospitalDetailsRepository.findByHospitalName(search, pageableRequest);
 	if(hp!=null) {		
-		paginationResponseDTO.setContents(convertObjectEntityToDto(hp.getContent()));
+		paginationResponseDTO.setContents(hp.getContent());
 		paginationResponseDTO.setNumberOfElements(hp.getNumberOfElements());
 		paginationResponseDTO.setTotalElements(hp.getTotalElements());
 		paginationResponseDTO.setTotalPages(hp.getTotalPages());
@@ -230,28 +231,28 @@ public GenericResponse searchHospital(String search, int pageNo, int pageSize) {
 			ErrorMessages.RECORED_FOUND);
 }
 
-private List<Object> convertObjectEntityToDto(List<Object> obj) {		
-	List<Object> objList = new ArrayList<Object>();
-	
-		obj.forEach(o->{
-			HospitalResponseDto hospitalResponseDto= new HospitalResponseDto();
-			User user = (User)o ;
-			//Hospital hospital = (Hospital)obj.get(1);
-			hospitalResponseDto.setHospitalId(user.getHospital().getId());
-			hospitalResponseDto.setUserName(user.getUserName());
-			hospitalResponseDto.setHospitalName(user.getHospital().getHospitalName());
-			hospitalResponseDto.setHospitalStatus(user.getHospital().isHospitalStatus());
-			hospitalResponseDto.setAddress1(user.getHospital().getAddress1());
-			hospitalResponseDto.setAddress2(user.getHospital().getAddress2());
-			hospitalResponseDto.setContactNumber(user.getHospital().getContactNumber());
-			if (user != null && user.getId() != null && user.getRole() != null) {
-				hospitalResponseDto.setRoleName(user.getRole().getRoleName());
-			}
-			objList.add(hospitalResponseDto);
-		});		
-
-	return objList;
-}
+//private List<Object> convertObjectEntityToDto(List<Object> obj) {		
+//	List<Object> objList = new ArrayList<Object>();
+//	
+//		obj.forEach(o->{
+//			HospitalResponseDto hospitalResponseDto= new HospitalResponseDto();
+//			User user = (User)o ;
+//			//Hospital hospital = (Hospital)obj.get(1);
+//			hospitalResponseDto.setHospitalId(user.getHospital().getId());
+//			hospitalResponseDto.setUserName(user.getUserName());
+//			hospitalResponseDto.setHospitalName(user.getHospital().getHospitalName());
+//			hospitalResponseDto.setHospitalStatus(user.getHospital().isHospitalStatus());
+//			hospitalResponseDto.setAddress1(user.getHospital().getAddress1());
+//			hospitalResponseDto.setAddress2(user.getHospital().getAddress2());
+//			hospitalResponseDto.setContactNumber(user.getHospital().getContactNumber());
+//			if (user != null && user.getId() != null && user.getRole() != null) {
+//				hospitalResponseDto.setRoleName(user.getRole().getRoleName());
+//			}
+//			objList.add(hospitalResponseDto);
+//		});		
+//
+//	return objList;
+//}
 
 
 	}

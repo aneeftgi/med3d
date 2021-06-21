@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService   {
 	
 				userRepository.save(user);
 				logger.debug("updateUser ends");
-				return Library.getSuccessfulResponse(convertUserEntityToDto(user),
+				return Library.getSuccessfulResponse("Record Updated Successfully",
 						ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_UPDATED);
 			} else {
 				logger.error("User Not found" );
