@@ -58,7 +58,7 @@ public class HospitalManagementController {
 	
 	@RequestMapping(value = "/updateHospital", method = RequestMethod.PUT)
 	@ApiOperation(value = "update hospital ", notes = "Returns HTTP 200 if successful get the record")
-	public ResponseEntity<Object> updateHospital(@RequestBody Hospital hospitalMasterRequestDto) throws Exception {
+	public ResponseEntity<Object> updateHospital(@RequestBody HospitalRequestDto hospitalMasterRequestDto) throws Exception {
 		GenericResponse objGenericResponse = hospitalService.updateHospital(hospitalMasterRequestDto);
 		return new ResponseEntity<>(objGenericResponse, ResponseHeaderUtility.HttpHeadersConfig(), HttpStatus.OK);
 	}

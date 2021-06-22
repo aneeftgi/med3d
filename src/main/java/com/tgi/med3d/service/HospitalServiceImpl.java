@@ -84,23 +84,13 @@ public class HospitalServiceImpl implements HospitalService  {
 	public GenericResponse addHospital(HospitalRequestDto hospitalRequestDto) {
 		logger.debug("addHospital starts");
 		HospitalValidator.createHospitalValidator(hospitalRequestDto);
-		isUserExists(hospitalRequestDto.getUserName());
+//		isUserExists(hospitalRequestDto.getUserName());
 		Hospital hospitalDetails = new Hospital();
 		User user = new User();
 
 		if (hospitalRequestDto != null) {
 			
 			/* user save starts */
-			// user 
-			user.setUserName(hospitalRequestDto.getUserName());
-			user.setStatus(true);
-			user.setRole(roleMasterRepository.getById(hospitalRequestDto.getRoleId()));
-			if (user.getPassword() == null) {
-				String newPasswordEnc = (hospitalRequestDto.getPassword().trim());
-				
-				user.setPassword(passwordEncoder.encode(newPasswordEnc));
-			}			
-			//user
 			// hospital details
 			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 			// hospital details
@@ -119,7 +109,17 @@ public class HospitalServiceImpl implements HospitalService  {
 
 	 private void pouplateHospitalDetails(User userMaster, HospitalRequestDto
 			 hospitalRequestDto,Hospital hospitalDetails) 
-	 { 
+	 { 	
+		 // user 
+		 userMaster.setUserName(hospitalRequestDto.getUserName());
+		 userMaster.setStatus(true);
+		 userMaster.setRole(roleMasterRepository.getById(hospitalRequestDto.getRoleId()));
+			if (userMaster.getPassword() == null) {
+				String newPasswordEnc = (hospitalRequestDto.getPassword().trim());
+				
+				userMaster.setPassword(passwordEncoder.encode(newPasswordEnc));
+			}			
+			//user				 
 			  hospitalDetails.setHospitalName(hospitalRequestDto.getHospitalDetails().getHospitalName());
 			 hospitalDetails.setHospitalStatus(hospitalRequestDto.getHospitalDetails().isHospitalStatus());
 			 hospitalDetails.setAddress1(hospitalRequestDto.getHospitalDetails().getAddress1());
@@ -131,21 +131,21 @@ public class HospitalServiceImpl implements HospitalService  {
 			  userMaster.setHospital(hospitalDetails);
 			  
 			  }
-	public GenericResponse updateHospital(Hospital hospital) {
+	public GenericResponse updateHospital(HospitalRequestDto hospitalRequestDto) {
 		logger.debug("updateHospital starts");
-//		HospitalValidator.createHospitalValidator(hospital);
+		HospitalValidator.createHospitalValidator(hospitalRequestDto);
 
-		if (hospital != null && hospital.getId() != null) {
-			Hospital hospitalChk = hospitalDetailsRepository.getById(hospital.getId());
-//			User user = userRepository.getById(hospitalRequestDto.getId());		
-if(hospitalChk!=null) {
-//			if (user != null && user.getId() != null) {
-//				
-//			Hospital hospitalDetails = user.getHospital();
-//				
-//			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
+		if (hospitalRequestDto != null && hospitalRequestDto.getId() != null) {
+//			Hospital hospitalChk = hospitalDetailsRepository.getById(hospital.getId());
+			User user = userRepository.getById(hospitalRequestDto.getId());		
+//if(hospitalChk!=null) {
+			if (user != null && user.getId() != null) {
+				
+			Hospital hospitalDetails = user.getHospital();
+				
+			pouplateHospitalDetails(user,hospitalRequestDto,hospitalDetails);
 						
-			hospitalDetailsRepository.save(hospital);
+			userRepository.save(user);
 			logger.debug("updateHospital ends");
 			return Library.getSuccessfulResponse("Record Updated Successfully",
 						ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_UPDATED);

@@ -27,6 +27,8 @@ public class HospitalRequestDto implements Serializable {
 			
 	private Long roleId;	
 	
+//	private boolean userStatus;
+	
 	private Hospital hospitalDetails;
 	
 }

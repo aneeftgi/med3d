@@ -11,9 +11,9 @@ public interface HospitalService {
 	
 	public GenericResponse addHospital(HospitalRequestDto hospitalRequestDto);
 
-	public GenericResponse updateHospital(Hospital hospitalRequestDto) ;
+	public GenericResponse updateHospital(HospitalRequestDto hospitalRequestDto) ;
 	
-	public GenericResponse deleteHospital(Long id) ;
+	public GenericResponse deleteHospital(Long id);
 
 	public GenericResponse searchHospital(String search, int pageNo, int pageSize);
 
