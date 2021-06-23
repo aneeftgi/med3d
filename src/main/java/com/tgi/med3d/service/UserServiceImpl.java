@@ -75,20 +75,20 @@ public class UserServiceImpl implements UserService   {
 			userList.forEach(um -> {
 				userResponseDtoList.add(convertUserEntityToDto(um));
 			});
-			
-		} else {
+					} else {
 			logger.error("No record found");
 			throw new RecordNotFoundException();
 		}
 		} else {
-			logger.error("No record found");
+			logger.error("This hospital was deleted");
 			throw new RecordNotFoundException();
 		}
-		
 		logger.debug("getUserByHospitalId ends");
 
 		return Library.getSuccessfulResponse(userResponseDtoList, ErrorCode.SUCCESS_RESPONSE.getErrorCode(),
 				ErrorMessages.RECORED_FOUND);
+
+		
 		}
 
 
@@ -98,8 +98,12 @@ public class UserServiceImpl implements UserService   {
 		userResponseDto.setUserName(user.getUserName());
 		userResponseDto.setPhoneNumber(user.getPhoneNumber());
 		userResponseDto.setStatus(user.isStatus());
+		userResponseDto.setAddress1(user.getAddress1());
+		userResponseDto.setAddress2(user.getAddress2());
+		userResponseDto.setGender(user.getGender());
+		userResponseDto.setHospitalId(user.getHospital().getId());
 		if (user != null && user.getId() != null && user.getRole() != null) {
-			userResponseDto.setRoleName(user.getRole().getRoleName());
+			userResponseDto.setRoleId(user.getRole().getId());
 		}
 
 		return userResponseDto;
@@ -159,12 +163,16 @@ public class UserServiceImpl implements UserService   {
 		if (userRequestDto != null && userRequestDto.getId() != null) {
 			User user = userRepository.getById(userRequestDto.getId());		
 
-			if (user != null && user.getId() != null) {
+			if (user != null && user.getId() != null) {		
 				
-				
-				
-//				user.setUserName(userRequestDto.getUserName());
+//			
+				/* user save starts */
+				// user 
+				user.setUserName(userRequestDto.getUserName());
 				user.setPhoneNumber(userRequestDto.getPhoneNumber());
+				user.setGender(userRequestDto.getGender());
+				user.setAddress1(userRequestDto.getAddress1());
+				user.setAddress2(userRequestDto.getAddress2());
 				user.setStatus(userRequestDto.isStatus());
 				user.setRole(roleMasterRepository.getById(userRequestDto.getRoleId()));
 				if (user.getPassword() == null) {
@@ -172,6 +180,14 @@ public class UserServiceImpl implements UserService   {
 					
 					user.setPassword(passwordEncoder.encode(newPasswordEnc));
 				}			
+				//user
+		
+				// hospital details
+				if( null != userRequestDto.getHospitalId()) {
+					Hospital hospitalDetails = hospitalDetailsRepository.getById(userRequestDto.getHospitalId());
+					user.setHospital(hospitalDetails);				
+				}
+				// hospital details		
 	
 				userRepository.save(user);
 				logger.debug("updateUser ends");
@@ -204,7 +220,7 @@ public class UserServiceImpl implements UserService   {
 			throw new RecordNotFoundException();
 		}
 		logger.debug("deleteUser ends");
-		return Library.getSuccessfulResponse(null,
+		return Library.getSuccessfulResponse("User deleted successfully",
 				ErrorCode.SUCCESS_RESPONSE.getErrorCode(), ErrorMessages.RECORED_DELETED);
 	}
 

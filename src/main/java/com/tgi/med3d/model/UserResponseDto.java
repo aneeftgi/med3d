@@ -16,15 +16,25 @@ public class UserResponseDto implements Serializable{
 	 */
 	private static final long serialVersionUID = -7157547015793301184L;
 	
-	private Long id;
-
-	private String userName;
+	private Long id; 
 	
-	private String roleName;
+	private String userName; 
 	
-	private String phoneNumber;	
+	private String phoneNumber; 
+	
+	private String gender;
+	
+	private String password; 
 	
 	private boolean status;
+	
+	private String address1;	
+	
+	private String address2;	
+	
+	private Long roleId;
+	
+	private Long hospitalId;
 	
 	
 }
